@@ -679,3 +679,20 @@ body {
 .sl-badge.cold { background: rgba(28,176,246,0.2);  color: #70d2ff; border: 1px solid rgba(28,176,246,0.3); }
 .sl-badge.room { background: rgba(88,204,2,0.2);    color: #7ddd30; border: 1px solid rgba(88,204,2,0.3); }
 .sl-note { font-size: 0.65rem; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 2px; text-align: right; }
+
+.sl-actions { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 0.75rem; }
+.sl-btn {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.12s;
+  letter-spacing: 0.5px;
+}
+.sl-btn.primary { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+.sl-btn.primary:hover { transform: translateY(-1px); }
+.sl-btn.secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
