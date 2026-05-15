@@ -1,0 +1,3108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍜 ASIATIQ — Рамэн Тренер</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #58CC02;
+    --green-dark: #45a001;
+    --green-light: #d7f5b1;
+    --blue: #1CB0F6;
+    --blue-dark: #0a9ad6;
+    --red: #FF4B4B;
+    --red-light: #FFE0E0;
+    --yellow: #FFD900;
+    --yellow-dark: #e5c300;
+    --orange: #FF9600;
+    --purple: #CE82FF;
+    --gray: #AFAFAF;
+    --gray-light: #F7F7F7;
+    --dark: #1f1f1f;
+    --text: #3C3C3C;
+    --text-muted: #777;
+    --border: #E5E5E5;
+    --white: #FFFFFF;
+    --card-shadow: 0 4px 0 rgba(0,0,0,0.12);
+    --radius: 12px;
+    --radius-lg: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f8e8;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCREENS */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ======= HOME SCREEN ======= */
+  #home {
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 0;
+  }
+
+  .home-header {
+    padding: 2rem 1.5rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .logo-bowl { font-size: 4rem; line-height: 1; margin-bottom: 0.5rem; animation: steam 2s ease-in-out infinite; }
+  @keyframes steam {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .logo-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #FFD900, #FF9600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+
+  .logo-sub { font-size: 0.9rem; color: rgba(255,255,255,0.6); letter-spacing: 1px; font-weight: 600; }
+
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    margin: 0 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat-item { text-align: center; }
+  .stat-icon { font-size: 1.4rem; }
+  .stat-value { font-size: 1.1rem; font-weight: 800; color: white; }
+  .stat-label { font-size: 0.65rem; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: 0.5px; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    padding: 1.5rem 1.5rem 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .recipe-list { padding: 0 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.75rem; flex: 1; overflow-y: auto; }
+
+  .recipe-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recipe-card::after {
+    content: '→';
+    position: absolute;
+    right: 1.25rem;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.3);
+    transition: transform 0.15s;
+  }
+
+  .recipe-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+  .recipe-card:hover::after { transform: translateX(3px); }
+  .recipe-card:active { transform: scale(0.98); }
+
+  .recipe-emoji { font-size: 2.5rem; flex-shrink: 0; }
+
+  .recipe-info { flex: 1; }
+  .recipe-name { font-size: 0.95rem; font-weight: 800; color: white; line-height: 1.2; }
+  .recipe-desc { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; font-weight: 600; }
+  .recipe-progress { margin-top: 0.5rem; height: 5px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+  .recipe-progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.5s ease; }
+
+  .btn-modes {
+    padding: 0 1.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .mode-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 1rem;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .mode-btn:hover { background: rgba(255,255,255,0.14); }
+  .mode-btn .mode-icon { font-size: 1.6rem; }
+  .mode-btn .mode-label { color: rgba(255,255,255,0.6); font-size: 0.7rem; font-weight: 600; }
+
+  /* ======= LESSON SCREEN ======= */
+  #lesson { background: white; }
+
+  .lesson-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--gray);
+    padding: 0.25rem;
+    border-radius: 8px;
+    transition: background 0.1s;
+    line-height: 1;
+  }
+  .btn-close:hover { background: var(--gray-light); }
+
+  .progress-track {
+    flex: 1;
+    height: 16px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .hearts { display: flex; gap: 4px; font-size: 1.1rem; flex-shrink: 0; }
+  .heart { transition: transform 0.2s; }
+  .heart.lost { filter: grayscale(1); opacity: 0.3; transform: scale(0.9); }
+
+  /* TIMER */
+  .timer-wrap {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+  .timer-svg { transform: rotate(-90deg); }
+  .timer-bg { fill: none; stroke: var(--border); stroke-width: 4; }
+  .timer-arc {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.9s linear, stroke 0.3s;
+  }
+  .timer-arc.warn  { stroke: var(--orange); }
+  .timer-arc.danger { stroke: var(--red); }
+  .timer-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--text);
+    transition: color 0.3s;
+  }
+  .timer-num.warn   { color: var(--orange); }
+  .timer-num.danger { color: var(--red); }
+
+  @keyframes timerPulse {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.12); }
+  }
+  .timer-wrap.pulse { animation: timerPulse 0.5s ease; }
+
+  .lesson-body {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    overflow-y: auto;
+  }
+
+  .question-type {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .question-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  .question-emoji { font-size: 3rem; text-align: center; margin: 0.5rem 0; }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .option-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 3px 0 var(--border);
+  }
+
+  .option-btn:hover:not(:disabled) { border-color: var(--blue); background: #EAF6FF; box-shadow: 0 3px 0 var(--blue); }
+  .option-btn.selected { border-color: var(--blue); background: #EAF6FF; box-shadow: 0 3px 0 var(--blue); }
+  .option-btn.correct { border-color: var(--green); background: var(--green-light); box-shadow: 0 3px 0 var(--green-dark); color: #3a7d01; }
+  .option-btn.wrong { border-color: var(--red); background: var(--red-light); box-shadow: 0 3px 0 #cc3333; color: #cc3333; }
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 2px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+
+  .flashcard-container {
+    perspective: 1000px;
+    flex: 1;
+    min-height: 280px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+  }
+
+  .flashcard-container.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .flashcard-front {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .flashcard-back {
+    background: white;
+    border: 2px solid var(--green);
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-front .fc-emoji { font-size: 4rem; }
+  .flashcard-front .fc-name { font-size: 1.3rem; font-weight: 900; color: #FFD900; }
+  .flashcard-front .fc-hint { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 1rem; }
+
+  .flashcard-back .fc-title { font-size: 1rem; font-weight: 800; color: var(--green-dark); }
+
+  .ingredients-list { text-align: left; width: 100%; font-size: 0.8rem; }
+  .ing-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .ing-row:last-child { border: none; }
+  .ing-name { color: var(--text); font-weight: 600; }
+  .ing-amount { color: var(--text-muted); font-weight: 700; font-size: 0.75rem; }
+
+  .fill-blank-input {
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100%;
+    transition: border-color 0.15s;
+    box-shadow: 0 3px 0 var(--border);
+  }
+  .fill-blank-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 3px 0 var(--blue); }
+  .fill-blank-input.correct { border-color: var(--green); box-shadow: 0 3px 0 var(--green-dark); color: var(--green-dark); }
+  .fill-blank-input.wrong { border-color: var(--red); box-shadow: 0 3px 0 #cc3333; color: var(--red); }
+
+  /* ======= FEEDBACK BAR ======= */
+  .feedback-bar {
+    padding: 1.25rem 1.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 3px solid var(--border);
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .feedback-bar.correct { background: var(--green-light); border-color: var(--green); }
+  .feedback-bar.wrong { background: var(--red-light); border-color: var(--red); }
+
+  .feedback-title { font-size: 1.1rem; font-weight: 900; }
+  .feedback-bar.correct .feedback-title { color: var(--green-dark); }
+  .feedback-bar.wrong .feedback-title { color: var(--red); }
+  .feedback-detail { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+  .feedback-bar.wrong .feedback-detail { color: #cc3333; }
+
+  .btn-continue {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.5px;
+  }
+  .btn-continue.correct { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .btn-continue.correct:hover { transform: translateY(-1px); }
+  .btn-continue.correct:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-dark); }
+  .btn-continue.wrong { background: var(--red); color: white; box-shadow: 0 4px 0 #cc3333; }
+  .btn-continue.wrong:hover { transform: translateY(-1px); }
+
+  .lesson-bottom {
+    padding: 1.25rem 1.5rem;
+    border-top: 2px solid var(--border);
+  }
+
+  .btn-check {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 0 var(--green-dark);
+    letter-spacing: 0.5px;
+    transition: all 0.12s;
+  }
+  .btn-check:hover { transform: translateY(-1px); }
+  .btn-check:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-dark); }
+  .btn-check:disabled { background: var(--gray-light); color: var(--gray); box-shadow: 0 4px 0 #d0d0d0; cursor: default; transform: none; }
+
+  /* ======= RESULTS SCREEN ======= */
+  #results {
+    background: linear-gradient(160deg, #1a1a2e 0%, #0f3460 100%);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .result-trophy { font-size: 5rem; animation: bounce 0.6s ease 0.3s both; }
+  @keyframes bounce {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .result-title { font-size: 2rem; font-weight: 900; color: #FFD900; }
+  .result-sub { font-size: 1rem; color: rgba(255,255,255,0.6); font-weight: 600; }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .result-stat {
+    background: rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 1rem 0.5rem;
+  }
+
+  .result-stat-icon { font-size: 1.6rem; }
+  .result-stat-value { font-size: 1.4rem; font-weight: 900; color: white; }
+  .result-stat-label { font-size: 0.65rem; color: rgba(255,255,255,0.5); font-weight: 700; letter-spacing: 0.5px; }
+
+  .btn-home, .btn-again {
+    padding: 0.9rem 2rem;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    letter-spacing: 0.5px;
+    transition: all 0.12s;
+    border: none;
+  }
+  .btn-again { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .btn-again:hover { transform: translateY(-1px); }
+  .btn-home { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); margin-top: 0.5rem; }
+  .btn-home:hover { background: rgba(255,255,255,0.16); }
+
+  /* ======= RECIPE SCREEN ======= */
+  #recipe-detail {
+    background: white;
+  }
+
+  .recipe-header {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .recipe-header .back-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+  }
+
+  .recipe-header .rh-text { flex: 1; }
+  .recipe-header .rh-emoji { font-size: 2.5rem; flex-shrink: 0; }
+  .recipe-header .rh-name { font-size: 1rem; font-weight: 900; color: #FFD900; line-height: 1.2; }
+  .recipe-header .rh-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+
+  .recipe-content { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .ing-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .ing-table th { background: var(--gray-light); padding: 6px 10px; text-align: left; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted); }
+  .ing-table th:not(:first-child) { text-align: right; }
+  .ing-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); font-weight: 600; }
+  .ing-table td:not(:first-child) { text-align: right; color: var(--text-muted); font-weight: 700; font-size: 0.8rem; }
+  .ing-table tr:last-child td { border: none; }
+
+  .tech-block {
+    background: var(--gray-light);
+    border-radius: var(--radius);
+    padding: 1rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .step-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .step-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #FFD900; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 0.85rem; font-weight: 600; line-height: 1.5; color: var(--text); flex: 1; }
+
+  .recipe-actions { padding: 1.25rem; border-top: 2px solid var(--border); display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .btn-study {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-study.primary { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .btn-study.primary:hover { transform: translateY(-1px); }
+  .btn-study.secondary { background: var(--gray-light); color: var(--text); border: 2px solid var(--border); }
+  .btn-study.secondary:hover { background: var(--border); }
+
+  /* ======= XP POPUP ======= */
+  .xp-popup {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #FFD900;
+    color: #7a5800;
+    font-weight: 900;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 99px;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    z-index: 100;
+    font-family: 'Nunito', sans-serif;
+  }
+  .xp-popup.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ======= SHAKE ANIMATION ======= */
+  @keyframes shake {
+    0%, 100% { transform: none; }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+  /* ======= SHELF LIFE SCREEN ======= */
+  #shelf-life {
+    background: linear-gradient(160deg, #1a1a2e 0%, #0f3460 100%);
+    color: white;
+  }
+  .sl-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.2);
+  }
+  .sl-header h2 { font-size: 1.1rem; font-weight: 900; color: #FFD900; flex: 1; }
+  .sl-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sl-tabs::-webkit-scrollbar { display: none; }
+  .sl-tab {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 99px;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .sl-tab.active {
+    background: #FFD900;
+    color: #1a1a2e;
+    border-color: #FFD900;
+  }
+  .sl-content { flex: 1; overflow-y: auto; padding: 1rem 1.5rem 1.5rem; }
+  .sl-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .sl-name { flex: 1; font-size: 0.82rem; font-weight: 700; color: white; line-height: 1.3; }
+  .sl-badges { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; flex-shrink: 0; }
+  .sl-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .sl-badge.hot  { background: rgba(255,150,0,0.25); color: #FFB840; border: 1px solid rgba(255,150,0,0.3); }
+  .sl-badge.cold { background: rgba(28,176,246,0.2);  color: #70d2ff; border: 1px solid rgba(28,176,246,0.3); }
+  .sl-badge.room { background: rgba(88,204,2,0.2);    color: #7ddd30; border: 1px solid rgba(88,204,2,0.3); }
+  .sl-note { font-size: 0.65rem; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 2px; text-align: right; }
+
+  .sl-actions { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 0.75rem; }
+  .sl-btn {
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.5px;
+  }
+  .sl-btn.primary { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .sl-btn.primary:hover { transform: translateY(-1px); }
+  .sl-btn.secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+  /* ======= KITCHEN SIMULATOR ======= */
+  #kitchen-sim {
+    background: #1a1208;
+    color: white;
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  #kitchen-sim.active { display: flex; }
+
+  .kitchen-header {
+    background: rgba(0,0,0,0.4);
+    border-bottom: 2px solid rgba(255,200,0,0.2);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  .kitchen-title { flex: 1; }
+  .kitchen-title h2 { font-size: 1rem; font-weight: 900; color: #FFD900; }
+  .kitchen-title p  { font-size: 0.7rem; color: rgba(255,255,255,0.45); font-weight: 600; margin-top: 1px; }
+  .kitchen-phase {
+    font-size: 0.65rem; font-weight: 800; padding: 3px 9px;
+    border-radius: 99px; letter-spacing: 0.5px; flex-shrink: 0;
+  }
+  .kitchen-phase.ticket  { background: rgba(255,200,0,0.2); color: #FFD900; border: 1px solid rgba(255,200,0,0.4); }
+  .kitchen-phase.cooking { background: rgba(255,100,0,0.25); color: #FF9640; border: 1px solid rgba(255,100,0,0.4); }
+  .kitchen-phase.check   { background: rgba(88,204,2,0.2);   color: #7ddd30; border: 1px solid rgba(88,204,2,0.4); }
+
+  /* TICKET */
+  .ticket-wrap {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .ticket-paper {
+    background: #fffef0;
+    color: #1a1a1a;
+    border-radius: 4px 4px 0 0;
+    padding: 0;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .ticket-paper::after {
+    content: '';
+    display: block;
+    height: 12px;
+    background: repeating-linear-gradient(90deg, #fffef0 0 10px, transparent 10px 14px);
+    border-top: 1px dashed #ccc;
+  }
+  .ticket-head {
+    background: #1a1a1a;
+    color: #FFD900;
+    padding: 0.75rem 1rem;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ticket-head span { font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; }
+  .ticket-num { background: #FFD900; color: #1a1a1a; font-size: 0.7rem; font-weight: 900; padding: 2px 8px; border-radius: 99px; }
+  .ticket-body { padding: 1rem; }
+  .ticket-dish {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed #e0ddc0;
+  }
+  .ticket-dish:last-child { border: none; }
+  .ticket-dish-emoji { font-size: 1.8rem; }
+  .ticket-dish-info { flex: 1; }
+  .ticket-dish-name { font-size: 0.9rem; font-weight: 800; color: #1a1a1a; }
+  .ticket-dish-sub  { font-size: 0.7rem; color: #777; font-weight: 600; }
+  .ticket-dish-num  { width: 28px; height: 28px; border-radius: 50%; background: #FFD900; color: #1a1a1a; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  .ticket-info { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.5); text-align: center; padding: 0.25rem 0; }
+
+  .kitchen-start-btn {
+    background: #FFD900;
+    color: #1a1a1a;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #b8970e;
+    transition: all 0.12s;
+    letter-spacing: 0.5px;
+  }
+  .kitchen-start-btn:hover { transform: translateY(-1px); }
+  .kitchen-start-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #b8970e; }
+
+  /* COOKING PHASE */
+  .cooking-wrap { flex: 1; overflow-y: auto; padding: 0; display: flex; flex-direction: column; }
+  .cooking-progress-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    flex-shrink: 0;
+  }
+  .cooking-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF9600, #FFD900);
+    transition: width 0.4s ease;
+  }
+  .dish-indicator {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(0,0,0,0.3);
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+  .dish-indicator::-webkit-scrollbar { display: none; }
+  .dish-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .dish-chip.active { background: rgba(255,200,0,0.2); border-color: #FFD900; color: #FFD900; }
+  .dish-chip.done   { background: rgba(88,204,2,0.2);  border-color: #58CC02; color: #7ddd30; }
+
+  .cooking-question { flex: 1; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .cook-type  { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; color: rgba(255,200,0,0.7); text-transform: uppercase; }
+  .cook-dish  { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4); }
+  .cook-q     { font-size: 1.1rem; font-weight: 800; color: white; line-height: 1.4; }
+  .cook-options { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.25rem; }
+  .cook-opt {
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .cook-opt:hover:not(:disabled) { background: rgba(255,255,255,0.12); border-color: rgba(255,200,0,0.5); }
+  .cook-opt.selected { border-color: #FFD900; background: rgba(255,200,0,0.12); }
+  .cook-opt.correct  { border-color: #58CC02; background: rgba(88,204,2,0.15); color: #7ddd30; }
+  .cook-opt.wrong    { border-color: var(--red); background: rgba(255,75,75,0.12); color: #ff7070; }
+  .cook-opt:disabled { cursor: default; }
+  .cook-letter {
+    width: 24px; height: 24px; border-radius: 6px;
+    border: 2px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800; flex-shrink: 0; opacity: 0.5;
+  }
+
+  .cook-feedback {
+    padding: 1rem 1.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-top: 2px solid rgba(255,255,255,0.08);
+    animation: slideUp 0.2s ease;
+    flex-shrink: 0;
+  }
+  .cook-feedback.correct { background: rgba(88,204,2,0.12); border-color: #58CC02; }
+  .cook-feedback.wrong   { background: rgba(255,75,75,0.12); border-color: var(--red); }
+  .cook-fb-title { font-size: 1rem; font-weight: 900; }
+  .cook-feedback.correct .cook-fb-title { color: #7ddd30; }
+  .cook-feedback.wrong   .cook-fb-title { color: #ff7070; }
+  .cook-fb-detail { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.5); }
+  .cook-next-btn {
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s;
+    margin-top: 0.25rem;
+  }
+  .cook-next-btn.correct { background: #58CC02; color: white; box-shadow: 0 3px 0 #45a001; }
+  .cook-next-btn.wrong   { background: var(--red); color: white; box-shadow: 0 3px 0 #cc3333; }
+
+  .cook-check-btn {
+    padding: 0.85rem;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: #FFD900;
+    color: #1a1a1a;
+    box-shadow: 0 4px 0 #b8970e;
+    transition: all 0.12s;
+    flex-shrink: 0;
+  }
+  .cook-check-btn:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); box-shadow: none; cursor: default; }
+  .cook-check-btn:hover:not(:disabled) { transform: translateY(-1px); }
+
+  /* KITCHEN RESULTS */
+  #kitchen-results {
+    background: linear-gradient(160deg, #1a1208 0%, #0f2010 100%);
+    color: white;
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  #kitchen-results.active { display: flex; }
+  .kr-trophy { font-size: 4.5rem; animation: bounce 0.6s ease 0.2s both; }
+  .kr-title   { font-size: 1.8rem; font-weight: 900; color: #FFD900; }
+  .kr-sub     { font-size: 0.9rem; color: rgba(255,255,255,0.55); font-weight: 600; }
+  .kr-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; width: 100%; max-width: 340px; }
+  .kr-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 0.85rem 0.5rem; }
+  .kr-stat-icon  { font-size: 1.4rem; }
+  .kr-stat-value { font-size: 1.4rem; font-weight: 900; color: white; }
+  .kr-stat-label { font-size: 0.6rem; color: rgba(255,255,255,0.45); font-weight: 700; letter-spacing: 0.5px; }
+  .kr-dishes { width: 100%; max-width: 340px; text-align: left; }
+  .kr-dish-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.82rem; font-weight: 700; }
+  .kr-dish-row:last-child { border: none; }
+  .kr-dish-score { margin-left: auto; font-size: 0.7rem; color: #FFD900; font-weight: 800; }
+  .kr-btn { width: 100%; max-width: 300px; padding: 0.85rem; border-radius: var(--radius); font-family: 'Nunito',sans-serif; font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: all 0.12s; border: none; letter-spacing: 0.5px; }
+  .kr-btn.primary { background: #FFD900; color: #1a1a1a; box-shadow: 0 4px 0 #b8970e; }
+  .kr-btn.primary:hover { transform: translateY(-1px); }
+  .kr-btn.secondary { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); margin-top: 0.5rem; }
+</style>
+</head>
+<body>
+
+<!-- XP Popup -->
+<div class="xp-popup" id="xpPopup">+10 XP ⭐</div>
+
+<!-- ===== HOME SCREEN ===== -->
+<div class="screen active" id="home">
+  <div class="home-header">
+    <div class="logo-bowl">🍜</div>
+    <div class="logo-title">ASIATIQ TRAINER</div>
+    <div class="logo-sub">РАМЭН • АКАДЕМИЯ</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-value" id="streakDisplay">0</div>
+      <div class="stat-label">Серия</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-value" id="xpDisplay">0</div>
+      <div class="stat-label">Очки</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value" id="correctDisplay">0</div>
+      <div class="stat-label">Верных</div>
+    </div>
+  </div>
+
+  <div class="section-label">Выбери рецепт для изучения</div>
+  <div id="recipeList"></div>
+
+  <div class="section-label" style="color: rgba(255,255,255,0.4);">Режимы тренировки</div>
+  <div class="btn-modes">
+    <button class="mode-btn" onclick="startRandomLesson('quiz')">
+      <span class="mode-icon">❓</span>
+      <span>Угадай граммовку</span>
+      <span class="mode-label">Проверь знание грамм</span>
+    </button>
+    <button class="mode-btn" onclick="startRandomLesson('which')">
+      <span class="mode-icon">🎯</span>
+      <span>Какой рецепт?</span>
+      <span class="mode-label">Угадай по ингредиенту</span>
+    </button>
+    <button class="mode-btn" onclick="startRandomLesson('missing')">
+      <span class="mode-icon">🧩</span>
+      <span>Что забыли?</span>
+      <span class="mode-label">Найди пропущенный</span>
+    </button>
+    <button class="mode-btn" onclick="startFlashcards()">
+      <span class="mode-icon">📚</span>
+      <span>Флешкарты</span>
+      <span class="mode-label">Все рецепты</span>
+    </button>
+    <button class="mode-btn" onclick="showShelfLife()" style="grid-column:1/-1; background:rgba(255,200,0,0.12); border-color:rgba(255,200,0,0.3);">
+      <span class="mode-icon">⏱️</span>
+      <span>Сроки годности</span>
+      <span class="mode-label">Учи и проверяй сроки хранения</span>
+    </button>
+    <button class="mode-btn" onclick="startKitchenSim()" style="grid-column:1/-1; background:rgba(255,100,0,0.15); border-color:rgba(255,100,0,0.35);">
+      <span class="mode-icon">👨‍🍳</span>
+      <span>Симулятор кухни</span>
+      <span class="mode-label">Собирай заказы, как на настоящей смене</span>
+    </button>
+  </div>
+</div>
+
+<!-- ===== RECIPE DETAIL SCREEN ===== -->
+<div class="screen" id="recipe-detail">
+  <div class="recipe-header">
+    <button class="back-btn" onclick="showHome()">←</button>
+    <div class="rh-emoji" id="rdEmoji">🍜</div>
+    <div class="rh-text">
+      <div class="rh-name" id="rdName">Рецепт</div>
+      <div class="rh-sub" id="rdSub">Описание</div>
+    </div>
+  </div>
+  <div class="recipe-content" id="rdContent"></div>
+  <div class="recipe-actions">
+    <button class="btn-study primary" onclick="startLessonForCurrent()">🎯 Тренировать этот рецепт</button>
+    <button class="btn-study secondary" onclick="startFlashcardForCurrent()">📚 Флешкарты</button>
+  </div>
+</div>
+
+<!-- ===== KITCHEN SIMULATOR ===== -->
+<div class="screen" id="kitchen-sim">
+  <div class="kitchen-header">
+    <button class="back-btn" onclick="showHome()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:white;font-size:1.1rem;padding:0.35rem 0.65rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;flex-shrink:0;">←</button>
+    <div class="kitchen-title">
+      <h2 id="ksTitle">👨‍🍳 Смена началась!</h2>
+      <p id="ksSubtitle">Новый заказ прилетел</p>
+    </div>
+    <span class="kitchen-phase ticket" id="ksPhase">ТИКЕТ</span>
+  </div>
+
+  <!-- TICKET PHASE -->
+  <div id="ksTicketPhase" class="ticket-wrap">
+    <div class="ticket-paper">
+      <div class="ticket-head">
+        <span>🎫 ЗАКАЗ</span>
+        <span class="ticket-num" id="ksOrderNum">#001</span>
+      </div>
+      <div class="ticket-body" id="ksTicketBody"></div>
+    </div>
+    <div class="ticket-info" id="ksTicketInfo"></div>
+    <button class="kitchen-start-btn" onclick="startCooking()">🔥 Начать готовить →</button>
+  </div>
+
+  <!-- COOKING PHASE -->
+  <div id="ksCookingPhase" style="display:none; flex:1; flex-direction:column; overflow:hidden; display:none;">
+    <div class="cooking-progress-bar"><div class="cooking-progress-fill" id="ksCookProgress" style="width:0%"></div></div>
+    <div class="dish-indicator" id="ksDishIndicator"></div>
+    <div class="cooking-question" id="ksCookQuestion"></div>
+    <div class="cook-feedback" id="ksCookFeedback">
+      <div class="cook-fb-title" id="ksFbTitle"></div>
+      <div class="cook-fb-detail" id="ksFbDetail"></div>
+      <button class="cook-next-btn" id="ksNextBtn" onclick="kitchenNext()">ДАЛЕЕ →</button>
+    </div>
+    <div style="padding:1rem 1.5rem; flex-shrink:0;" id="ksBtnWrap">
+      <button class="cook-check-btn" id="ksCheckBtn" onclick="kitchenCheck()" disabled>ПРОВЕРИТЬ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KITCHEN RESULTS ===== -->
+<div class="screen" id="kitchen-results">
+  <div class="kr-trophy" id="krTrophy">🏆</div>
+  <div class="kr-title" id="krTitle">Смена закрыта!</div>
+  <div class="kr-sub" id="krSub"></div>
+  <div class="kr-stats">
+    <div class="kr-stat"><div class="kr-stat-icon">⭐</div><div class="kr-stat-value" id="krXP">0</div><div class="kr-stat-label">XP</div></div>
+    <div class="kr-stat"><div class="kr-stat-icon">✅</div><div class="kr-stat-value" id="krCorrect">0</div><div class="kr-stat-label">Верно</div></div>
+    <div class="kr-stat"><div class="kr-stat-icon">🍽️</div><div class="kr-stat-value" id="krDishes">0</div><div class="kr-stat-label">Блюд</div></div>
+  </div>
+  <div class="kr-dishes" id="krDishList"></div>
+  <button class="kr-btn primary" onclick="startKitchenSim()">🔄 Новая смена</button>
+  <button class="kr-btn secondary" onclick="showHome()">← На главную</button>
+</div>
+
+<!-- ===== SHELF LIFE SCREEN ===== -->
+<div class="screen" id="shelf-life">
+  <div class="sl-header">
+    <button class="back-btn" onclick="showHome()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:white;font-size:1.1rem;padding:0.35rem 0.65rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;">←</button>
+    <h2>⏱️ Сроки годности</h2>
+    <button class="sl-btn primary" style="flex:none;padding:0.5rem 1rem;font-size:0.8rem;" onclick="startShelfLifeQuiz()">🎯 Тест</button>
+  </div>
+  <div class="sl-tabs" id="slTabs"></div>
+  <div class="sl-content" id="slContent"></div>
+</div>
+
+<!-- ===== LESSON SCREEN ===== -->
+<div class="screen" id="lesson">
+  <div class="lesson-top">
+    <button class="btn-close" onclick="confirmClose()">✕</button>
+    <div class="progress-track">
+      <div class="progress-fill" id="lessonProgress" style="width:0%"></div>
+    </div>
+    <!-- circular countdown timer -->
+    <div class="timer-wrap" id="timerWrap">
+      <svg class="timer-svg" width="44" height="44" viewBox="0 0 44 44">
+        <circle class="timer-bg" cx="22" cy="22" r="18"/>
+        <circle class="timer-arc" id="timerArc" cx="22" cy="22" r="18"
+          stroke-dasharray="113.1" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-num" id="timerNum">15</div>
+    </div>
+    <div class="hearts" id="heartsDisplay">
+      <span class="heart">❤️</span>
+      <span class="heart">❤️</span>
+      <span class="heart">❤️</span>
+    </div>
+  </div>
+
+  <div class="lesson-body" id="lessonBody"></div>
+
+  <div class="feedback-bar" id="feedbackBar">
+    <div class="feedback-title" id="feedbackTitle"></div>
+    <div class="feedback-detail" id="feedbackDetail"></div>
+    <button class="btn-continue" id="btnContinue" onclick="nextQuestion()">ДАЛЕЕ →</button>
+  </div>
+
+  <div class="lesson-bottom" id="lessonBottom">
+    <button class="btn-check" id="btnCheck" onclick="checkAnswer()" disabled>ПРОВЕРИТЬ</button>
+  </div>
+</div>
+
+<!-- ===== RESULTS SCREEN ===== -->
+<div class="screen" id="results">
+  <div class="result-trophy" id="resultTrophy">🏆</div>
+  <div class="result-title" id="resultTitle">Отлично!</div>
+  <div class="result-sub" id="resultSub">Урок пройден</div>
+  <div class="result-stats">
+    <div class="result-stat">
+      <div class="result-stat-icon">⭐</div>
+      <div class="result-stat-value" id="resXP">0</div>
+      <div class="result-stat-label">XP</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-icon">✅</div>
+      <div class="result-stat-value" id="resCorrect">0</div>
+      <div class="result-stat-label">Верно</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-icon">❤️</div>
+      <div class="result-stat-value" id="resHearts">0</div>
+      <div class="result-stat-label">Жизни</div>
+    </div>
+  </div>
+  <button class="btn-again" onclick="restartLesson()">🔄 Ещё раз</button>
+  <button class="btn-home" onclick="showHome()">← На главную</button>
+</div>
+
+<script>
+const RECIPES = [
+  {
+    id: 0, category: 'ramen',
+    name: "Карри рамэн",
+    sub: "на креветочном бульоне • Тунец",
+    emoji: "🍛",
+    color: "#FF9600",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Тунец пф", big: "40 г", small: "30 г", bigNum: 40, smallNum: 30 },
+      { name: "Креветочный бульон пф", big: "260 г", small: "180 г", bigNum: 260, smallNum: 180 },
+      { name: "Лук зеленый очищ. пф", big: "15 г", small: "10 г", bigNum: 15, smallNum: 10 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Соус Карри пф", big: "40 г", small: "20 г", bigNum: 40, smallNum: 20 },
+      { name: "Грибы шиитаке отварные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "½ шт", bigNum: 1, smallNum: 0.5, unit: "шт" },
+      { name: "Кунжут жареный ассорти пф", big: "1 г", small: "½ г", bigNum: 1, smallNum: 0.5 },
+      { name: "Масло креветочное", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Развернуть лапшу, отрянуть от муки",
+      "Положить в кипящую воду. Отварить 40 сек (до 12 ч хранения) или 2 мин (после 12 ч хранения)",
+      "Положить лапшу в центр тарелки",
+      "С одного края тарелки положить лук зеленый, ростки сои, грибы шиитаке, яйцо, тунец",
+      "Налить соус Карри",
+      "Залить кипящим креветочным бульоном",
+      "При отдаче: положить нори, посыпать кунжутом",
+      "Добавить пф креветочное масло"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+  {
+    id: 1, category: 'ramen',
+    name: "Том ям рамэн",
+    sub: "на креветочном бульоне • Тунец/Цыпленок/Креветки",
+    emoji: "🌶️",
+    color: "#FF4B4B",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Тунец/Цыпленок/Креветка пф", big: "40 г / 4 шт", small: "30 г / 2 шт", bigNum: 40, smallNum: 30 },
+      { name: "Том ям бульон пф", big: "260 г", small: "180 г", bigNum: 260, smallNum: 180 },
+      { name: "Лук зеленый очищ. пф", big: "15 г", small: "10 г", bigNum: 15, smallNum: 10 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Грибы шиитаке отварные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "½ шт", bigNum: 1, smallNum: 0.5, unit: "шт" },
+      { name: "Лемонграсс очищ.", big: "1 шт", small: "1 шт", bigNum: 1, smallNum: 1, unit: "шт" },
+      { name: "Лист лайм", big: "2 шт", small: "1 шт", bigNum: 2, smallNum: 1, unit: "шт" },
+      { name: "Соус том ям пф", big: "40 г", small: "20 г", bigNum: 40, smallNum: 20 },
+      { name: "Кунжут жареный ассорти пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Масло креветочное пф", big: "¼", small: "¼", bigNum: 0.25, smallNum: 0.25 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Развернуть лапшу, отрянуть от муки",
+      "Положить в кипящую воду. Отварить 40 сек (до 12 ч) или 1 мин (после 12 ч хранения)",
+      "Положить лапшу отварную в центр тарелки",
+      "С одного края тарелки положить лук зеленый, ростки сои, грибы шиитаке, яйцо, лемонграсс, лист лайма, Тунец/Цыпленок/Креветки",
+      "Налить соус том ям",
+      "Залить кипящим том ям бульоном",
+      "При отдаче: положить нори, посыпать кунжутом",
+      "Добавить пф креветочное масло"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+  {
+    id: 2, category: 'ramen',
+    name: "Рамэн говяжий",
+    sub: "на говяжьем бульоне • Говядина/Цыпленок",
+    emoji: "🥩",
+    color: "#8B4513",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Говядина/Цыпленок пф", big: "40 г", small: "30 г", bigNum: 40, smallNum: 30 },
+      { name: "Бульон говяжий пф", big: "260 г", small: "180 г", bigNum: 260, smallNum: 180 },
+      { name: "Кайши для гов. бульона пф", big: "40 г", small: "20 г", bigNum: 40, smallNum: 20 },
+      { name: "Лук зеленый очищ. пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Грибы шиитаке отварные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "½ шт", bigNum: 1, smallNum: 0.5, unit: "шт" },
+      { name: "Кунжут жареный ассорти пф", big: "1 г", small: "1 г", bigNum: 1, smallNum: 1 },
+      { name: "Чесночное масло пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Развернуть лапшу, отрянуть от муки",
+      "Положить в кипящую воду. Отварить согласно инструкции: 40 сек (до 12 ч) или 1 мин (после 12 ч)",
+      "Положить отварную лапшу в тарелку",
+      "Добавить кайши. С одного края тарелки положить лук зеленый, ростки сои, грибы шиитаке, яйцо, говядину/цыпленка",
+      "Залить кипящим говяжьим бульоном, слегка перемешать лапшу",
+      "При отдаче: положить нори, посыпать кунжутом",
+      "Добавить пф чесночное масло"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+  {
+    id: 3, category: 'ramen',
+    name: "Рамэн морской",
+    sub: "на креветочном бульоне • Креветки/Тунец/Лосось",
+    emoji: "🦐",
+    color: "#1CB0F6",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Креветка/Тунец/Лосось пф", big: "40 г / 4 шт", small: "30 г / 2 шт", bigNum: 40, smallNum: 30 },
+      { name: "Бульон креветочный пф", big: "260 г", small: "180 г", bigNum: 260, smallNum: 180 },
+      { name: "Кайши для кр. бульона пф", big: "40 г", small: "15 г", bigNum: 40, smallNum: 15 },
+      { name: "Лук зеленый очищ. пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Грибы шиитаке отварные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "½ шт", bigNum: 1, smallNum: 0.5, unit: "шт" },
+      { name: "Кунжут жареный ассорти пф", big: "1 г", small: "1 г", bigNum: 1, smallNum: 1 },
+      { name: "Масло креветочное пф", big: "¼", small: "¼", bigNum: 0.25, smallNum: 0.25 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Развернуть лапшу, отрянуть от муки",
+      "Положить в кипящую воду. Отварить согласно инструкции: 40 сек (до 12 ч) или 1 мин (после 12 ч)",
+      "Положить лапшу отварную в центр тарелки",
+      "Добавить кайши. С одного края тарелки положить лук зеленый, ростки сои, грибы шиитаке, яйцо, Креветки/Тунец/Лосось",
+      "Залить кипящим креветочным бульоном",
+      "При отдаче: положить нори, посыпать кунжутом",
+      "Добавить пф креветочное масло"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+  {
+    id: 4, category: 'ramen',
+    name: "Мисо рамэн",
+    sub: "Цыпленок/Тофу",
+    emoji: "🫙",
+    color: "#CE82FF",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Цыпленок пф / Тофу мар. пф", big: "40 г", small: "30 г", bigNum: 40, smallNum: 30 },
+      { name: "Мисо бульон пф", big: "260 г", small: "180 г", bigNum: 260, smallNum: 180 },
+      { name: "Вакаме замоч. резаное пф", big: "30 г", small: "15 г", bigNum: 30, smallNum: 15 },
+      { name: "Лук зеленый очищ. пф", big: "15 г", small: "10 г", bigNum: 15, smallNum: 10 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "10 г", bigNum: 20, smallNum: 10 },
+      { name: "Кайши говяжий пф", big: "40 г", small: "20 г", bigNum: 40, smallNum: 20 },
+      { name: "Грибы шиитаке отварные пф", big: "20 шт", small: "10 шт", bigNum: 20, smallNum: 10, unit: "шт" },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "½ шт", bigNum: 1, smallNum: 0.5, unit: "шт" },
+      { name: "Кунжут жареный ассорти пф", big: "1", small: "1", bigNum: 1, smallNum: 1 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Развернуть лапшу, отрянуть от муки",
+      "Положить в кипящую воду. Отварить 40 сек (до 12 ч) или 1 мин (после 12 ч хранения)",
+      "Положить лапшу отварную в центр тарелки",
+      "Добавить кайши говяжий, лук зеленый",
+      "С одного края тарелки положить ростки сои, грибы шиитаке, яйцо, вакаме",
+      "Залить мисо бульоном кипящим",
+      "При отдаче: положить нори, посыпать кунжутом"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+  {
+    id: 5, category: 'ramen',
+    name: "Том ям вегетарианский",
+    sub: "Тофу • Вегетарианский бульон",
+    emoji: "🌿",
+    color: "#58CC02",
+    progress: 0,
+    ingredients: [
+      { name: "Лапша (сырая/отварная) пф", big: "140/220 г", small: "70/110 г", bigNum: 140, smallNum: 70 },
+      { name: "Бульон том ям вегетарианский", big: "200 г", small: "200 г", bigNum: 200, smallNum: 200 },
+      { name: "Лук зеленый очищ. пф", big: "15 г", small: "15 г", bigNum: 15, smallNum: 15 },
+      { name: "Ростки сои маринованные пф", big: "20 г", small: "20 г", bigNum: 20, smallNum: 20 },
+      { name: "Грибы шиитаке отварные пф", big: "25 г", small: "25 г", bigNum: 25, smallNum: 25 },
+      { name: "Яйцо маринованное пф", big: "1 шт", small: "1 шт", bigNum: 1, smallNum: 1, unit: "шт" },
+      { name: "Черри", big: "25 г", small: "25 г", bigNum: 25, smallNum: 25 },
+      { name: "Тофу маринованный пф", big: "52 г", small: "52 г", bigNum: 52, smallNum: 52 },
+      { name: "Молоко кокосовое", big: "35 г", small: "35 г", bigNum: 35, smallNum: 35 },
+      { name: "Нори", big: "¼ шт", small: "¼ шт", bigNum: 0.25, smallNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "Приготовить вегетарианский том ям бульон: вода 180 г, соль 5 г, аджиномото 3 г, кокосовое молоко 80 г",
+      "Развернуть лапшу, отрянуть от муки, отварить",
+      "Положить лапшу в центр тарелки",
+      "Добавить ростки сои, грибы, черри, тофу, яйцо, лук",
+      "Залить горячим вегетарианским том ям бульоном",
+      "Добавить кокосовое молоко",
+      "При отдаче: положить нори"
+    ],
+    output: "650 г (бол) / 400 г (мал)"
+  },
+
+  // ===== ЗАКУСКИ =====
+  {
+    id: 6, category: 'snack', single: true,
+    name: "Тигровые креветки кацу",
+    sub: "Закуска • 4 или 8 шт",
+    emoji: "🍤",
+    ingredients: [
+      { name: "Креветки в панировке пф", amount: "90/180 г (4шт/8шт)", amountNum: 90 },
+      { name: "Шпинат мини", amount: "3/6 г", amountNum: 3 },
+      { name: "Ростки пф", amount: "10 г", amountNum: 10 },
+      { name: "Соус манго-терияки", amount: "30/60 г (соусник)", amountNum: 30 },
+      { name: "Кунжут жареный ассорти пф", amount: "1 г", amountNum: 1 },
+    ],
+    steps: [
+      "Креветки в панировке 4 шт обжарить во фритюре согласно инструкции",
+      "В тарелку выложить шпинат мини замешанный с проростками сои",
+      "Рядом со шпинатом выложить обжаренные креветки, посыпать кунжутом",
+      "Соус манго терияки налить в соусник"
+    ],
+    output: "110/30/3/10/1"
+  },
+  {
+    id: 7, category: 'snack', single: true,
+    name: "Цыпленок кацу",
+    sub: "Закуска • Курица в панировке",
+    emoji: "🍗",
+    ingredients: [
+      { name: "Курица кацу в панировке пф", amount: "80 г", amountNum: 80 },
+      { name: "Шпинат мини", amount: "3 г", amountNum: 3 },
+      { name: "Ростки пф", amount: "10 г", amountNum: 10 },
+      { name: "Соус манго-терияки", amount: "30 г (соусник)", amountNum: 30 },
+      { name: "Кунжут жареный ассорти пф", amount: "1 г", amountNum: 1 },
+    ],
+    steps: [
+      "Пф курицу кацу обжарить во фритюре согласно ТК",
+      "Нарезать на 8 кусков",
+      "В тарелку выложить шпинат мини замешанный с проростками сои",
+      "Рядом со шпинатом выложить курицу кацу, посыпать кунжутом",
+      "Соус манго терияки налить в соусник"
+    ],
+    output: "144 г"
+  },
+  {
+    id: 8, category: 'snack', single: true,
+    name: "Нежный сыр тофу (панко)",
+    sub: "Закуска • Тофу в сухарях панко",
+    emoji: "🧀",
+    ingredients: [
+      { name: "Тофу кацу в панировке пф", amount: "80 г", amountNum: 80 },
+      { name: "Шпинат мини", amount: "3 г", amountNum: 3 },
+      { name: "Ростки пф", amount: "10 г", amountNum: 10 },
+      { name: "Соус манго-терияки", amount: "30 г (соусник)", amountNum: 30 },
+      { name: "Кунжут жареный ассорти пф", amount: "1 г", amountNum: 1 },
+    ],
+    steps: [
+      "Тофу в панировке обжарить согласно инструкции",
+      "В тарелку выложить шпинат мини замешанный с проростками сои",
+      "Рядом со шпинатом выложить обжаренный тофу, посыпать кунжутом",
+      "Соус манго терияки налить в соусник"
+    ],
+    output: "114 г"
+  },
+  {
+    id: 9, category: 'snack', single: true,
+    name: "Курочка Карааге",
+    sub: "Закуска • Бедро карааге",
+    emoji: "🍖",
+    ingredients: [
+      { name: "Кура бедро Карааге обжаренная пф", amount: "120 г", amountNum: 120 },
+      { name: "Шпинат мини", amount: "3 г", amountNum: 3 },
+      { name: "Ростки пф", amount: "10 г", amountNum: 10 },
+      { name: "Соус манго-терияки", amount: "30 г (соусник)", amountNum: 30 },
+      { name: "Кунжут жареный ассорти пф", amount: "1 г", amountNum: 1 },
+    ],
+    steps: [
+      "Пф карааге прогреть перед подачей во фритюре (убедиться, что готово полностью, сделать контрольный надрез)",
+      "В тарелку выложить шпинат мини замешанный с проростками сои",
+      "Рядом со шпинатом выложить обжаренную курочку карааге, посыпать кунжутом",
+      "Соус манго терияки налить в соусник"
+    ],
+    output: "164 г"
+  },
+  {
+    id: 10, category: 'snack', single: true,
+    name: "Онигири с цыпленком",
+    sub: "Закуска • Рис + Кура су-вид",
+    emoji: "🍙",
+    ingredients: [
+      { name: "Рис отварной заправленный пф", amount: "25/25 г", amountNum: 25 },
+      { name: "Кура су-вид пф", amount: "30 г", amountNum: 30 },
+      { name: "Спайси соус онигири пф", amount: "10 г", amountNum: 10 },
+      { name: "Кляр пф", amount: "20 г", amountNum: 20 },
+      { name: "Сухари панко", amount: "10 г", amountNum: 10 },
+      { name: "Нори", amount: "¼ шт", amountNum: 0.25, unit: "шт" },
+    ],
+    steps: [
+      "В форму для онигири выложить 25 г риса и разровнять по всей площади формы",
+      "На рис выложить начинку: 30 г кура су-вид + 10 г соус онигири, разровнять",
+      "Выложить второй слой риса 25 г, разровнять, закрыть форму и прижать",
+      "Извлечь онигири из формы путём переворачивания",
+      "Готовое онигири запанировать в кляре (пф кляр единый) и сухарях панко",
+      "Обжарить во фритюре"
+    ],
+    output: "110 г"
+  },
+  {
+    id: 11, category: 'snack', single: true,
+    name: "Онигири с тунцом",
+    sub: "Закуска • Рис + Тунец",
+    emoji: "🍙",
+    ingredients: [
+      { name: "Рис отварной заправленный пф", amount: "25/25 г", amountNum: 25 },
+      { name: "Тунец пф", amount: "30 г (кубик 0.5×0.5 см)", amountNum: 30 },
+      { name: "Спайси соус онигири пф", amount: "10 г", amountNum: 10 },
+      { name: "Кляр пф", amount: "20 г", amountNum: 20 },
+      { name: "Сухари панко", amount: "10 г", amountNum: 10 },
+      { name: "Нори", amount: "¼ шт", amountNum: 0.25, unit: "шт" },
+      { name: "Кунжут черный", amount: "3 г", amountNum: 3 },
+    ],
+    steps: [
+      "В форму выложить 25 г риса, разровнять",
+      "Начинка: 30 г тунец (кубик 0.5×0.5 см) + 10 г соус онигири",
+      "Выложить второй слой риса 25 г, закрыть форму, прижать",
+      "Извлечь онигири переворачиванием формы",
+      "Запанировать в кляре и смеси сухарей панко + черного кунжута",
+      "Обжарить во фритюре"
+    ],
+    output: "110 г"
+  },
+  {
+    id: 12, category: 'snack', single: true,
+    name: "Онигири с лососем",
+    sub: "Закуска • Рис + Лосось",
+    emoji: "🍙",
+    ingredients: [
+      { name: "Рис отварной заправленный пф", amount: "25/25 г", amountNum: 25 },
+      { name: "Лосось с/с пф", amount: "30 г (кубик 0.5×0.5 см)", amountNum: 30 },
+      { name: "Спайси соус онигири пф", amount: "10 г", amountNum: 10 },
+      { name: "Кляр пф", amount: "20 г", amountNum: 20 },
+      { name: "Сухари панко", amount: "10 г", amountNum: 10 },
+      { name: "Нори", amount: "¼ шт", amountNum: 0.25, unit: "шт" },
+      { name: "Кунжут белый пф", amount: "3 г", amountNum: 3 },
+    ],
+    steps: [
+      "В форму выложить 25 г риса, разровнять",
+      "Начинка: 30 г лосось (кубик 0.5×0.5 см) + 10 г соус онигири",
+      "Выложить второй слой риса 25 г, закрыть форму, прижать",
+      "Извлечь онигири переворачиванием формы",
+      "Запанировать в кляре и смеси сухарей панко + белого кунжута",
+      "Обжарить во фритюре"
+    ],
+    output: "110 г"
+  },
+  {
+    id: 13, category: 'snack', single: true,
+    name: "Гедза",
+    sub: "Закуска • Свинина/Курица/Креветка",
+    emoji: "🥟",
+    ingredients: [
+      { name: "Гедза в ассортименте (кр./свин./кур.)", amount: "5 шт / 100 г", amountNum: 100 },
+      { name: "Соус манго-терияки", amount: "30 г (в соусник)", amountNum: 30 },
+      { name: "Масло растительное", amount: "20 г", amountNum: 20 },
+      { name: "Кунжут жареный", amount: "1 г", amountNum: 1 },
+    ],
+    steps: [
+      "Гедза отварить в кипящей воде в течение 3 мин",
+      "Обжарить на раскалённой сковороде до золотистого цвета с одной стороны",
+      "Выложить в тарелку, посыпать кунжутом",
+      "Соус манго терияки налить в соусник"
+    ],
+    output: "130 г"
+  },
+
+  // ===== ПОКЕ =====
+  {
+    id: 14, category: 'poke', single: true,
+    name: "Поке: Лосось медово-кунж.",
+    sub: "Рис + Лосось • Медово-кунжутный соус",
+    emoji: "🍱",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Лосось пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Чукка", amount: "30 г", amountNum: 30 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус медово-кунжутный пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить лосось", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "321 г"
+  },
+  {
+    id: 15, category: 'poke', single: true,
+    name: "Поке: Тунец свит-чили",
+    sub: "Рис + Тунец • Соус свит-чили",
+    emoji: "🌶️",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Тунец пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Черри", amount: "20 г (на 4 части)", amountNum: 20 },
+      { name: "Яйцо пф 1 шт", amount: "50 г (пополам)", amountNum: 50 },
+      { name: "Соус свит-чили пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить тунец", "По кругу выложить черри, ростки, здомаме, шпинат, яйцо", "Налить соус по всей поверхности, посыпать кунжутом"],
+    output: "331 г"
+  },
+  {
+    id: 16, category: 'poke', single: true,
+    name: "Поке: Лосось манго терияки",
+    sub: "Рис + Лосось • Соус манго терияки",
+    emoji: "🥭",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Лосось пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Дайкон пф", amount: "30 г", amountNum: 30 },
+      { name: "Гриб ледяной пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус манго терияки пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить лосось", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "322 г"
+  },
+  {
+    id: 17, category: 'poke', single: true,
+    name: "Поке: Тунец кокосовый",
+    sub: "Рис + Тунец • Кокосовый соус",
+    emoji: "🥥",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Тунец пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Грибы муэр пф", amount: "30 г", amountNum: 30 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Дайкон пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус кокосовый пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить тунец", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "332 г"
+  },
+
+  // ===== БОУЛЫ =====
+  {
+    id: 18, category: 'bowl', single: true,
+    name: "Боул: Цыпленок кокосовый",
+    sub: "Рис + Курица су-вид • Кокосовый соус",
+    emoji: "🥥",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Курица сю-вид пф", amount: "60 г", amountNum: 60 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Черри", amount: "20 г (на 4 части)", amountNum: 20 },
+      { name: "Грибы муэр пф", amount: "30 г", amountNum: 30 },
+      { name: "Соус кокосовый пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить курицу", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "342 г"
+  },
+  {
+    id: 19, category: 'bowl', single: true,
+    name: "Боул: Цыпленок свит-чили",
+    sub: "Рис + Курица су-вид • Свит-чили",
+    emoji: "🌶️",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Курица сю-вид пф", amount: "60 г", amountNum: 60 },
+      { name: "Капуста ким чи пф", amount: "30 г", amountNum: 30 },
+      { name: "Дайкон", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Ростки сои пф", amount: "20 г", amountNum: 20 },
+      { name: "Соус свит-чили пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить курицу", "По кругу выложить оставшиеся ингредиенты", "Налить соус по всей поверхности, посыпать кунжутом"],
+    output: "342 г"
+  },
+  {
+    id: 20, category: 'bowl', single: true,
+    name: "Боул: Креветки медово-кунж.",
+    sub: "Рис + Креветки отварные • Медово-кунжутный",
+    emoji: "🦐",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Креветки отварные пф (4 шт)", amount: "60 г", amountNum: 60 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Грибы муэр пф", amount: "30 г", amountNum: 30 },
+      { name: "Ростки сои пф", amount: "20 г", amountNum: 20 },
+      { name: "Соус медовокунжутный пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить варёные креветки спиной вверх", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "342 г"
+  },
+  {
+    id: 21, category: 'bowl', single: true,
+    name: "Боул: Креветки манго терияки",
+    sub: "Рис + Креветки отварные • Манго терияки",
+    emoji: "🥭",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Здомаме", amount: "20 г", amountNum: 20 },
+      { name: "Креветки отварные пф (4 шт)", amount: "60 г", amountNum: 60 },
+      { name: "Авокадо пф", amount: "40 г (кубик 2×2)", amountNum: 40 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Ледяной гриб пф", amount: "30 г", amountNum: 30 },
+      { name: "Соус манго терияки пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить варёные креветки спиной вверх", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "342 г"
+  },
+
+  // ===== ДОНБУРИ =====
+  {
+    id: 22, category: 'donburi', single: true,
+    name: "Донбури: Карааге свит-чили",
+    sub: "Рис + Курица карааге • Свит-чили",
+    emoji: "🍖",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Зеленый лук пф", amount: "10 г", amountNum: 10 },
+      { name: "Курица карааге пф", amount: "80 г", amountNum: 80 },
+      { name: "Битые огурцы пф", amount: "30 г", amountNum: 30 },
+      { name: "Ростки сои пф", amount: "20 г", amountNum: 20 },
+      { name: "Соус свит-чили пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить карааге", "По кругу выложить остальные ингредиенты", "Налить соус по всей поверхности, посыпать кунжутом"],
+    output: "322 г"
+  },
+  {
+    id: 23, category: 'donburi', single: true,
+    name: "Донбури: Кацу медово-кунж.",
+    sub: "Рис + Курица кацу • Медово-кунжутный",
+    emoji: "🍗",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Зеленый лук пф", amount: "10 г", amountNum: 10 },
+      { name: "Курица кацу пф 1 шт", amount: "80 г (на 8 слоёв)", amountNum: 80 },
+      { name: "Гриб ледяной пф", amount: "30 г", amountNum: 30 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус медово-кунжутный пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить нарезанную кацу", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "332 г"
+  },
+  {
+    id: 24, category: 'donburi', single: true,
+    name: "Донбури: Креветки кацу манго",
+    sub: "Рис + Креветки кацу 3шт • Манго терияки",
+    emoji: "🦐",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Зеленый лук пф", amount: "10 г", amountNum: 10 },
+      { name: "Креветки кацу пф (3 шт)", amount: "100 г", amountNum: 100 },
+      { name: "Капуста ким чи пф", amount: "30 г", amountNum: 30 },
+      { name: "Огурец св. пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус манго терияки пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "По кругу выложить ингредиенты", "Налить соус в центр, посыпать кунжутом"],
+    output: "352 г"
+  },
+  {
+    id: 25, category: 'donburi', single: true,
+    name: "Донбури: Тофу кокосовый",
+    sub: "Рис + Тофу кацу • Кокосовый соус",
+    emoji: "🫘",
+    ingredients: [
+      { name: "Рис пф", amount: "130 г", amountNum: 130 },
+      { name: "Шпинат мини", amount: "10 г", amountNum: 10 },
+      { name: "Зеленый лук пф", amount: "10 г", amountNum: 10 },
+      { name: "Тофу кацу пф", amount: "80 г", amountNum: 80 },
+      { name: "Черри", amount: "20 г (на 4 части)", amountNum: 20 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Авокадо пф", amount: "40 г (кубик 2×2)", amountNum: 40 },
+      { name: "Соус кокосовый пф", amount: "40 г", amountNum: 40 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["Выложить рис", "В центр выложить тофу", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "352 г"
+  },
+
+  // ===== САЛАТЫ =====
+  {
+    id: 26, category: 'salad', single: true,
+    name: "Салат: Авокадо медово-кунж.",
+    sub: "Шпинат + Авокадо • Медово-кунжутный",
+    emoji: "🥑",
+    ingredients: [
+      { name: "Шпинат мини", amount: "40 г", amountNum: 40 },
+      { name: "Авокадо пф", amount: "60 г (кубик 2×2)", amountNum: 60 },
+      { name: "Огурец св. пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Черри", amount: "30 г (на 4 части)", amountNum: 30 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Яйцо 1 шт", amount: "40 г (пополам)", amountNum: 40 },
+      { name: "Соус медовокунжутный пф", amount: "30 г", amountNum: 30 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["В центр выложить шпинат горкой", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "262 г"
+  },
+  {
+    id: 27, category: 'salad', single: true,
+    name: "Салат: Курица карааге кокос",
+    sub: "Шпинат + Курица карааге • Кокосовый",
+    emoji: "🍗",
+    ingredients: [
+      { name: "Курица карааге пф", amount: "60 г", amountNum: 60 },
+      { name: "Шпинат мини", amount: "40 г", amountNum: 40 },
+      { name: "Огурец св. пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Черри", amount: "30 г (на 4 части)", amountNum: 30 },
+      { name: "Гриб ледяной пф", amount: "30 г", amountNum: 30 },
+      { name: "Ростки пф", amount: "20 г (пополам)", amountNum: 20 },
+      { name: "Соус кокосовый пф", amount: "30 г", amountNum: 30 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["В центр выложить шпинат горкой", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "252 г"
+  },
+  {
+    id: 28, category: 'salad', single: true,
+    name: "Салат: Лосось манго терияки",
+    sub: "Шпинат + Лосось • Манго терияки",
+    emoji: "🐟",
+    ingredients: [
+      { name: "Шпинат мини", amount: "40 г", amountNum: 40 },
+      { name: "Лосось пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Авокадо пф", amount: "40 г (кубик 2×2)", amountNum: 40 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Чукка", amount: "30 г", amountNum: 30 },
+      { name: "Огурец св. пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Соус манго терияки пф", amount: "30 г", amountNum: 30 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["В центр выложить шпинат горкой", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "242 г"
+  },
+  {
+    id: 29, category: 'salad', single: true,
+    name: "Салат: Креветки свит-чили",
+    sub: "Шпинат + Креветки отварные • Свит-чили",
+    emoji: "🦐",
+    ingredients: [
+      { name: "Шпинат мини", amount: "40 г", amountNum: 40 },
+      { name: "Креветка отвар. пф (4 шт)", amount: "60 г", amountNum: 60 },
+      { name: "Черри", amount: "30 г (на 4 части)", amountNum: 30 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Грибы муэр пф", amount: "30 г", amountNum: 30 },
+      { name: "Дайкон пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Соус свит-чили пф", amount: "30 г", amountNum: 30 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["В центр выложить шпинат горкой", "По кругу выложить оставшиеся ингредиенты", "Налить соус по всей поверхности, посыпать кунжутом"],
+    output: "242 г"
+  },
+  {
+    id: 30, category: 'salad', single: true,
+    name: "Салат: Тунец медово-кунж.",
+    sub: "Шпинат + Тунец • Медово-кунжутный",
+    emoji: "🐠",
+    ingredients: [
+      { name: "Шпинат мини", amount: "40 г", amountNum: 40 },
+      { name: "Тунец пф", amount: "40 г (кубик 1.5×1.5)", amountNum: 40 },
+      { name: "Дайкон пф", amount: "30 г (кубик 1.5×1.5)", amountNum: 30 },
+      { name: "Черри", amount: "30 г (на 4 части)", amountNum: 30 },
+      { name: "Ростки пф", amount: "20 г", amountNum: 20 },
+      { name: "Битые огурцы пф", amount: "30 г", amountNum: 30 },
+      { name: "Соус медово-кунжутный пф", amount: "30 г", amountNum: 30 },
+      { name: "Кунжут белый жар. пф", amount: "2 г", amountNum: 2 },
+    ],
+    steps: ["В центр выложить шпинат горкой", "По кругу выложить оставшиеся ингредиенты", "Налить соус, посыпать кунжутом"],
+    output: "222 г"
+  },
+];
+
+// STATE
+let state = {
+  xp: parseInt(localStorage.getItem('ramenXP') || '0'),
+  streak: parseInt(localStorage.getItem('ramenStreak') || '0'),
+  correct: parseInt(localStorage.getItem('ramenCorrect') || '0'),
+  recipeProgress: JSON.parse(localStorage.getItem('ramenProgress') || '{}'),
+};
+
+let lessonState = {
+  questions: [],
+  current: 0,
+  hearts: 3,
+  correctCount: 0,
+  earnedXP: 0,
+  selectedAnswer: null,
+  answered: false,
+  mode: 'quiz',
+  targetRecipe: null,
+};
+
+function saveState() {
+  localStorage.setItem('ramenXP', state.xp);
+  localStorage.setItem('ramenStreak', state.streak);
+  localStorage.setItem('ramenCorrect', state.correct);
+  localStorage.setItem('ramenProgress', JSON.stringify(state.recipeProgress));
+}
+
+// ===== SCREEN NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showHome() {
+  renderHome();
+  showScreen('home');
+}
+
+function confirmClose() {
+  if (confirm('Выйти из урока? Прогресс будет потерян.')) { stopTimer(); showHome(); }
+}
+
+// ===== CATEGORIES =====
+const CATEGORIES = [
+  { key: 'ramen',   label: '🍜 Рамэны' },
+  { key: 'snack',   label: '🍤 Закуски' },
+  { key: 'poke',    label: '🍱 Поке' },
+  { key: 'bowl',    label: '🥣 Боулы' },
+  { key: 'donburi', label: '🍛 Донбури' },
+  { key: 'salad',   label: '🥗 Салаты' },
+];
+
+// ===== HOME RENDER =====
+function renderHome() {
+  document.getElementById('streakDisplay').textContent = state.streak;
+  document.getElementById('xpDisplay').textContent = state.xp;
+  document.getElementById('correctDisplay').textContent = state.correct;
+
+  let html = '';
+  CATEGORIES.forEach(cat => {
+    const recipes = RECIPES.filter(r => r.category === cat.key);
+    if (!recipes.length) return;
+    html += `<div class="section-label">${cat.label}</div><div class="recipe-list" style="padding:0 1.5rem 0.5rem">`;
+    recipes.forEach(r => {
+      const prog = state.recipeProgress[r.id] || 0;
+      html += `
+        <div class="recipe-card" onclick="showRecipeDetail(${r.id})">
+          <div class="recipe-emoji">${r.emoji}</div>
+          <div class="recipe-info">
+            <div class="recipe-name">${r.name}</div>
+            <div class="recipe-desc">${r.sub}</div>
+            <div class="recipe-progress">
+              <div class="recipe-progress-fill" style="width:${prog}%"></div>
+            </div>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('recipeList').innerHTML = html;
+}
+
+// ===== RECIPE DETAIL =====
+let currentRecipeId = 0;
+
+function showRecipeDetail(id) {
+  currentRecipeId = id;
+  const r = RECIPES.find(x => x.id === id);
+  document.getElementById('rdEmoji').textContent = r.emoji;
+  document.getElementById('rdName').textContent = r.name;
+  document.getElementById('rdSub').textContent = r.sub;
+
+  const content = document.getElementById('rdContent');
+
+  // Build ingredient table — handle both big/small (ramen) and single amount
+  let ingTable;
+  if (r.single) {
+    ingTable = `
+      <table class="ing-table">
+        <thead><tr><th>Наименование</th><th>Нетто</th></tr></thead>
+        <tbody>
+          ${r.ingredients.map(i => `<tr><td>${i.name}</td><td>${i.amount}</td></tr>`).join('')}
+        </tbody>
+      </table>`;
+  } else {
+    ingTable = `
+      <table class="ing-table">
+        <thead><tr><th>Наименование</th><th>Бол.</th><th>Мал.</th></tr></thead>
+        <tbody>
+          ${r.ingredients.map(i => `<tr><td>${i.name}</td><td>${i.big}</td><td>${i.small}</td></tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  content.innerHTML = `
+    <div>
+      <div class="section-title">Ингредиенты</div>
+      ${ingTable}
+    </div>
+    <div>
+      <div class="section-title">Технология приготовления</div>
+      <div class="step-list">
+        ${r.steps.map((s, i) => `
+          <div class="step-item">
+            <div class="step-num">${i + 1}</div>
+            <div class="step-text">${s}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="section-title">Выход</div>
+      <div class="tech-block">${r.output}</div>
+    </div>
+  `;
+
+  showScreen('recipe-detail');
+}
+
+function startLessonForCurrent() {
+  startLesson('quiz', currentRecipeId);
+}
+
+function startFlashcardForCurrent() {
+  startFlashcards(currentRecipeId);
+}
+
+// ===== QUESTION GENERATORS =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function getWrongAmounts(correct, isSmall) {
+  const nums = [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100, 110, 140, 150, 180, 200, 220, 260];
+  return shuffle(nums.filter(n => n !== correct)).slice(0, 3).map(n => n + ' г');
+}
+
+function makeQuizQuestion(recipe) {
+  if (recipe.single) {
+    // single-portion: use amount / amountNum
+    const valid = recipe.ingredients.filter(i => i.amountNum >= 10 && !i.unit);
+    const ing = rand(valid.length ? valid : recipe.ingredients.filter(i => !i.unit));
+    const correct = ing.amount;
+    const wrongNums = [10,15,20,25,30,40,50,60,80,100,120,130].filter(n => n !== ing.amountNum);
+    const wrongs = shuffle(wrongNums).slice(0,3).map(n => n + ' г');
+    const options = shuffle([correct, ...wrongs]);
+    return {
+      type: 'quiz',
+      questionType: 'Угадай граммовку',
+      question: `${recipe.emoji} ${recipe.name}\n\nСколько нужно:\n«${ing.name}»?`,
+      options,
+      correct,
+      detail: `${ing.name}: ${ing.amount}`,
+      recipe,
+    };
+  }
+
+  const ing = rand(recipe.ingredients.filter(i => i.bigNum > 0.25));
+  const isSmall = Math.random() > 0.5;
+  const correct = isSmall ? ing.small : ing.big;
+  const size = isSmall ? 'малую' : 'большую';
+
+  let wrongOptions = [];
+  if (ing.unit === 'шт') {
+    const wrongNums = [0.5, 1, 2, 3, 4].filter(n => n !== (isSmall ? ing.smallNum : ing.bigNum));
+    wrongOptions = shuffle(wrongNums).slice(0, 3).map(n => n < 1 ? '½ шт' : n + ' шт');
+  } else {
+    wrongOptions = getWrongAmounts(isSmall ? ing.smallNum : ing.bigNum, isSmall);
+  }
+
+  const options = shuffle([correct, ...wrongOptions.slice(0, 3)]);
+
+  return {
+    type: 'quiz',
+    questionType: 'Угадай граммовку',
+    question: `${recipe.emoji} ${recipe.name} — ${size} порция\n\nСколько нужно:\n«${ing.name}»?`,
+    options,
+    correct,
+    detail: `${ing.name}: бол. ${ing.big} / мал. ${ing.small}`,
+    recipe,
+  };
+}
+
+function makeWhichRecipeQuestion(allRecipes) {
+  const recipe = rand(allRecipes);
+  const uniqueIng = recipe.ingredients.find(i =>
+    !allRecipes.filter(r => r.id !== recipe.id).some(r =>
+      r.ingredients.some(ri => ri.name === i.name)
+    )
+  ) || rand(recipe.ingredients.filter(i => !['Лапша (сырая/отварная) пф', 'Нори', 'Яйцо маринованное пф', 'Ростки сои маринованные пф', 'Грибы шиитаке отварные пф', 'Лук зеленый очищ. пф'].includes(i.name)));
+
+  const wrongRecipes = shuffle(allRecipes.filter(r => r.id !== recipe.id)).slice(0, 3);
+  const options = shuffle([recipe, ...wrongRecipes]);
+
+  return {
+    type: 'which',
+    questionType: 'Какой это рецепт?',
+    question: `В каком рамэне используется:\n«${uniqueIng.name}»?`,
+    options: options.map(r => r.emoji + ' ' + r.name),
+    correct: recipe.emoji + ' ' + recipe.name,
+    detail: `Это ингредиент рецепта "${recipe.name}"`,
+    recipe,
+  };
+}
+
+function makeMissingQuestion(recipe) {
+  const allNames = recipe.ingredients.map(i => i.name);
+  const correct = rand(allNames);
+  const wrongPool = RECIPES.flatMap(r => r.ingredients.map(i => i.name)).filter(n => !allNames.includes(n));
+  const wrongs = shuffle([...new Set(wrongPool)]).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+
+  return {
+    type: 'missing',
+    questionType: 'Что забыли добавить?',
+    question: `${recipe.emoji} ${recipe.name}\n\nКакой из этих ингредиентов входит в рецепт?`,
+    options,
+    correct,
+    detail: `«${correct}» — ингредиент рецепта "${recipe.name}"`,
+    recipe,
+  };
+}
+
+function makeFlashcard(recipe) {
+  return {
+    type: 'flashcard',
+    recipe,
+  };
+}
+
+// ===== LESSON MANAGEMENT =====
+function startLesson(mode, recipeId) {
+  const questions = [];
+
+  if (mode === 'flashcard') {
+    const recipes = recipeId !== undefined ? [RECIPES.find(r => r.id === recipeId)] : RECIPES;
+    recipes.forEach(r => questions.push(makeFlashcard(r)));
+  } else {
+    const targetRecipes = recipeId !== undefined ? [RECIPES.find(r => r.id === recipeId)] : RECIPES;
+    const count = 8;
+
+    for (let i = 0; i < count; i++) {
+      const recipe = rand(targetRecipes);
+      if (mode === 'quiz' || mode === 'all') {
+        questions.push(makeQuizQuestion(recipe));
+      } else if (mode === 'which') {
+        questions.push(makeWhichRecipeQuestion(RECIPES));
+      } else if (mode === 'missing') {
+        questions.push(makeMissingQuestion(recipe));
+      }
+    }
+  }
+
+  lessonState = {
+    questions: shuffle(questions),
+    current: 0,
+    hearts: 3,
+    correctCount: 0,
+    earnedXP: 0,
+    selectedAnswer: null,
+    answered: false,
+    mode,
+    targetRecipeId: recipeId,
+  };
+
+  renderLesson();
+  showScreen('lesson');
+}
+
+function startRandomLesson(mode) {
+  startLesson(mode, undefined);
+}
+
+function startFlashcards(recipeId) {
+  startLesson('flashcard', recipeId);
+}
+
+// ===== TIMER =====
+const TIMER_SECONDS = 15;
+const CIRCUMFERENCE = 2 * Math.PI * 18; // r=18 → ~113.1
+let timerInterval = null;
+let timerLeft = TIMER_SECONDS;
+
+function startTimer() {
+  stopTimer();
+  timerLeft = TIMER_SECONDS;
+  renderTimerUI();
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    renderTimerUI();
+    if (timerLeft <= 0) {
+      stopTimer();
+      onTimerExpired();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function renderTimerUI() {
+  const arc = document.getElementById('timerArc');
+  const num = document.getElementById('timerNum');
+  const wrap = document.getElementById('timerWrap');
+  if (!arc) return;
+
+  const ratio = timerLeft / TIMER_SECONDS;
+  const offset = CIRCUMFERENCE * (1 - ratio);
+  arc.style.strokeDashoffset = offset;
+  num.textContent = timerLeft;
+
+  const isWarn   = timerLeft <= 8 && timerLeft > 4;
+  const isDanger = timerLeft <= 4;
+
+  arc.className  = 'timer-arc' + (isDanger ? ' danger' : isWarn ? ' warn' : '');
+  num.className  = 'timer-num' + (isDanger ? ' danger' : isWarn ? ' warn' : '');
+
+  if (timerLeft <= 4 && timerLeft > 0) {
+    wrap.classList.remove('pulse');
+    void wrap.offsetWidth;
+    wrap.classList.add('pulse');
+  }
+}
+
+function hideTimer() {
+  const wrap = document.getElementById('timerWrap');
+  if (wrap) wrap.style.visibility = 'hidden';
+}
+function showTimer() {
+  const wrap = document.getElementById('timerWrap');
+  if (wrap) wrap.style.visibility = '';
+}
+
+function onTimerExpired() {
+  if (lessonState.answered) return;
+  const q = lessonState.questions[lessonState.current];
+  if (q.type === 'flashcard') return;
+
+  // auto-fail: mark all disabled, highlight correct
+  lessonState.answered = true;
+  lessonState.selectedAnswer = null;
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.value === q.correct) b.classList.add('correct');
+  });
+  showFeedback(false, q, true);
+}
+
+// ===== LESSON RENDER =====
+function renderLesson() {
+  const q = lessonState.questions[lessonState.current];
+  const total = lessonState.questions.length;
+  const pct = (lessonState.current / total) * 100;
+
+  document.getElementById('lessonProgress').style.width = pct + '%';
+
+  const hearts = document.getElementById('heartsDisplay');
+  hearts.innerHTML = [0,1,2].map(i =>
+    `<span class="heart ${i >= lessonState.hearts ? 'lost' : ''}">❤️</span>`
+  ).join('');
+
+  const body = document.getElementById('lessonBody');
+  const feedback = document.getElementById('feedbackBar');
+  const bottom = document.getElementById('lessonBottom');
+
+  feedback.style.display = 'none';
+  feedback.className = 'feedback-bar';
+  bottom.style.display = '';
+
+  lessonState.answered = false;
+  lessonState.selectedAnswer = null;
+
+  if (q.type === 'flashcard') {
+    hideTimer();
+    renderFlashcard(q, body, bottom);
+  } else {
+    showTimer();
+    renderMultiChoice(q, body, bottom);
+    startTimer();
+  }
+}
+
+function renderMultiChoice(q, body, bottom) {
+  const letters = ['А', 'Б', 'В', 'Г'];
+  body.innerHTML = `
+    <div class="question-type">${q.questionType}</div>
+    <div class="question-text">${q.question.replace(/\n/g, '<br>')}</div>
+    <div class="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="selectOption(this, '${opt.replace(/'/g, "\\'")}')" data-value="${opt.replace(/"/g, '&quot;')}">
+          <span class="option-letter">${letters[i]}</span>
+          ${opt}
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  const checkBtn = document.getElementById('btnCheck');
+  checkBtn.disabled = true;
+  checkBtn.textContent = 'ПРОВЕРИТЬ';
+  bottom.style.display = '';
+}
+
+function renderFlashcard(q, body, bottom) {
+  const r = q.recipe;
+  const ingList = r.ingredients.slice(0, 9).map(i => {
+    const amt = r.single ? i.amount : `${i.big} / ${i.small}`;
+    return `<div class="ing-row"><span class="ing-name">${i.name}</span><span class="ing-amount">${amt}</span></div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="question-type">Флешкарта — нажми чтобы перевернуть</div>
+    <div class="flashcard-container" id="fc" onclick="flipCard()">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-emoji">${r.emoji}</div>
+          <div class="fc-name">${r.name}</div>
+          <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); font-weight:600;">${r.sub}</div>
+          <div class="fc-hint">👆 Нажми, чтобы увидеть состав</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-title">${r.emoji} ${r.name} — Состав</div>
+          <div class="ingredients-list">${ingList}</div>
+          <div style="font-size:0.7rem; color:#777; margin-top:0.5rem; font-weight:700;">Выход: ${r.output}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const checkBtn = document.getElementById('btnCheck');
+  checkBtn.disabled = false;
+  checkBtn.textContent = 'СЛЕДУЮЩАЯ →';
+  bottom.style.display = '';
+}
+
+function flipCard() {
+  document.getElementById('fc').classList.toggle('flipped');
+}
+
+// ===== INTERACTION =====
+function selectOption(btn, value) {
+  if (lessonState.answered) return;
+  lessonState.selectedAnswer = value;
+
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  document.getElementById('btnCheck').disabled = false;
+}
+
+function checkAnswer() {
+  if (lessonState.answered) return;
+  const q = lessonState.questions[lessonState.current];
+
+  if (q.type === 'flashcard') {
+    nextQuestion();
+    return;
+  }
+
+  lessonState.answered = true;
+  stopTimer();
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+  const isCorrect = lessonState.selectedAnswer === q.correct;
+
+  document.querySelectorAll('.option-btn').forEach(b => {
+    if (b.dataset.value === q.correct) b.classList.add('correct');
+    else if (b.dataset.value === lessonState.selectedAnswer && !isCorrect) b.classList.add('wrong');
+  });
+
+  showFeedback(isCorrect, q);
+}
+
+function showFeedback(isCorrect, q, timedOut = false) {
+  const bar = document.getElementById('feedbackBar');
+  const title = document.getElementById('feedbackTitle');
+  const detail = document.getElementById('feedbackDetail');
+  const btn = document.getElementById('btnContinue');
+  const bottom = document.getElementById('lessonBottom');
+
+  bottom.style.display = 'none';
+  bar.style.display = 'flex';
+
+  if (isCorrect) {
+    bar.className = 'feedback-bar correct';
+    // bonus XP for speed
+    const bonus = timerLeft >= 10 ? 5 : timerLeft >= 5 ? 2 : 0;
+    const xpGain = 10 + bonus;
+    title.textContent = rand(['🎉 Верно!', '✅ Правильно!', '🔥 Отлично!', '⭐ Молодец!'])
+      + (bonus > 0 ? ` (+${bonus} за скорость)` : '');
+    detail.textContent = q.detail || '';
+    btn.className = 'btn-continue correct';
+    lessonState.correctCount++;
+    lessonState.earnedXP += xpGain;
+    state.correct++;
+    showXP(`+${xpGain} XP`);
+  } else {
+    bar.className = 'feedback-bar wrong';
+    title.textContent = timedOut ? '⏰ Время вышло! Правильный ответ:' : '❌ Не так! Правильный ответ:';
+    detail.textContent = q.correct + (q.detail ? ' — ' + q.detail : '');
+    btn.className = 'btn-continue wrong';
+    lessonState.hearts--;
+    if (lessonState.hearts <= 0) lessonState.hearts = 0;
+    updateHearts();
+
+    const lessonEl = document.getElementById('lesson');
+    lessonEl.classList.add('shake');
+    setTimeout(() => lessonEl.classList.remove('shake'), 400);
+  }
+
+  btn.textContent = lessonState.current < lessonState.questions.length - 1 ? 'ДАЛЕЕ →' : 'ЗАВЕРШИТЬ →';
+}
+
+function updateHearts() {
+  const hearts = document.getElementById('heartsDisplay');
+  hearts.innerHTML = [0,1,2].map(i =>
+    `<span class="heart ${i >= lessonState.hearts ? 'lost' : ''}">❤️</span>`
+  ).join('');
+}
+
+function nextQuestion() {
+  lessonState.current++;
+
+  if (lessonState.hearts <= 0 || lessonState.current >= lessonState.questions.length) {
+    showResults();
+    return;
+  }
+
+  renderLesson();
+}
+
+function showXP(text) {
+  const popup = document.getElementById('xpPopup');
+  popup.textContent = text;
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 1500);
+}
+
+// ===== RESULTS =====
+function showResults() {
+  stopTimer();
+  state.xp += lessonState.earnedXP;
+  if (lessonState.correctCount > 0) state.streak++;
+  else state.streak = 0;
+
+  if (lessonState.targetRecipeId !== undefined) {
+    const pct = Math.round((lessonState.correctCount / Math.max(lessonState.questions.length, 1)) * 100);
+    const current = state.recipeProgress[lessonState.targetRecipeId] || 0;
+    state.recipeProgress[lessonState.targetRecipeId] = Math.min(100, Math.max(current, pct));
+  }
+
+  saveState();
+
+  const accuracy = Math.round((lessonState.correctCount / Math.max(lessonState.questions.length, 1)) * 100);
+
+  document.getElementById('resultTrophy').textContent = accuracy >= 80 ? '🏆' : accuracy >= 50 ? '⭐' : '💪';
+  document.getElementById('resultTitle').textContent = accuracy >= 80 ? 'Отлично!' : accuracy >= 50 ? 'Хорошо!' : 'Продолжай!';
+  document.getElementById('resultSub').textContent = `Точность ${accuracy}% • ${lessonState.correctCount} из ${lessonState.questions.length} верно`;
+  document.getElementById('resXP').textContent = '+' + lessonState.earnedXP;
+  document.getElementById('resCorrect').textContent = lessonState.correctCount;
+  document.getElementById('resHearts').textContent = lessonState.hearts;
+
+  showScreen('results');
+}
+
+function restartLesson() {
+  startLesson(lessonState.mode, lessonState.targetRecipeId);
+}
+
+// ===== SHELF LIFE DATA =====
+const SHELF_LIFE = {
+  'Рыба и морепродукты': [
+    { name: 'Лосось дефрост в вакууме',              hot: '36 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лосось нарезанный 1.5×1.5 см пф',       hot: '36 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Креветка тигровая чищеная пф (разморозка)', hot: '48 ч', cold: null,      room: null,    note: '' },
+    { name: 'Креветка тигровая пф Заморозок (оттайка)', hot: '48 ч', cold: '15 суток', room: null,   note: '' },
+    { name: 'Тигровые креветки в панировке (кацу) пф', hot: '48 ч', cold: null,       room: null,    note: '' },
+    { name: 'Тунец филе пф (кубик 1.5×1.5 см)',      hot: '36 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Тунец с/м (дефрост)',                    hot: '36 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Крабовые палочки после вскрытия',        hot: '72 ч',   cold: 'по ярлычку', room: null,  note: '' },
+    { name: 'Панцири креветочные для Биск',           hot: null,     cold: '30 дней',  room: null,    note: '' },
+    { name: 'Биск пф',                                hot: '24 ч',   cold: '30 дней',  room: null,    note: '' },
+  ],
+  'Овощи, зелень, фрукты': [
+    { name: 'Чеснок очищенный пф',                   hot: '48 ч',   cold: null,       room: 'по этикетке', note: '' },
+    { name: 'Черри резанные пф',                     hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лук репчатый очищенный пф',             hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Овощи, грибы, фрукты мытые',            hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Зелень обработанная мытая',              hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Нарезанные овощи и фрукты, зелень',     hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Авокадо нарезанный пф',                 hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лук зеленый нарезанный пф',             hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лук зеленый мытый',                     hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Грибы Шиитаки отварные пф',             hot: '48 ч',   cold: '10 суток', room: null,    note: '' },
+    { name: 'Лист Лайм',                             hot: '12 ч',   cold: null,       room: 'по ярлычку', note: '' },
+    { name: 'Лемонграсс',                            hot: '18 ч',   cold: null,       room: 'по ярлычку', note: '' },
+    { name: 'Ростки сои маринованные пф',             hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Дайкон нарезанный пф',                  hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Бобы Эдомаме пф',                       hot: '24 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лемонграсс нарезанный пф',              hot: '18 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Кинза мытая пф',                        hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Шпинат мини мытый',                     hot: '48 ч',   cold: null,       room: null,    note: '' },
+  ],
+  'Бульоны': [
+    { name: 'Бульон говяжий пф',                     hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Бульон креветочный пф',                 hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Мисо бульон пф',                        hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Бульон сырный пф',                      hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Бульон том ям пф',                      hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Матча бульон чай пф',                   hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+    { name: 'Бульон том ям вегетарианский пф',       hot: '48 ч',   cold: '12 ч',     room: null,    note: '' },
+  ],
+  'ПФ (полуфабрикаты)': [
+    { name: 'Заготовки д/супов к Б/Л без бульонов', hot: '6 ч',    cold: '4 ч',      room: null,    note: 'При отдаче залить горячим кипящим бульоном' },
+    { name: 'Кайши говяжий пф',                      hot: '24 ч',   cold: '30 суток', room: null,    note: '' },
+    { name: 'Кайши креветочный пф',                  hot: '24 ч',   cold: '30 суток', room: null,    note: '' },
+    { name: 'Все консервации после вскрытия',         hot: null,     cold: null,       room: '12 ч (до конца смены)', note: '' },
+    { name: 'Водоросли ВАКАМЕ (замоченные) пф',       hot: '24 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Тесто кляр пф',                         hot: '12 ч',   cold: null,       room: '7 дней', note: '' },
+    { name: 'Кунжут жареный пф',                     hot: '24 ч',   cold: null,       room: 'в прикрытом виде', note: '' },
+    { name: 'Фунгоза отварная пф',                   hot: '6 ч',    cold: null,       room: null,    note: '' },
+    { name: 'Тесто по лапшу пф',                     hot: '12 ч',   cold: null,       room: 'в прикрытом виде', note: '' },
+    { name: 'Мука которая после панировки',           hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Лапша сырая нарезная пф',               hot: '48 ч',   cold: '30 дней',  room: '12 ч',  note: '' },
+    { name: 'Острое масло чили пф',                  hot: '48 ч',   cold: '30 дней',  room: '12 ч',  note: '' },
+    { name: 'Креветочное масло пф',                  hot: '48 ч',   cold: '30 дней',  room: 'в прикрытом виде', note: '' },
+    { name: 'Чесночное масло пф',                    hot: '6 ч',    cold: null,       room: null,    note: '' },
+    { name: 'Лапша отварная (перед открытием)',       hot: '10 дней', cold: null,      room: null,    note: '' },
+    { name: 'Сунгиза пф',                            hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Тофу маринованный пф',                  hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Тофу кацу пф',                          hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Рис заправленный отварной пф',           hot: '24 ч',   cold: null,       room: null,    note: 'В рисоварке' },
+    { name: 'Лист лайма в боксе',                    hot: '48 ч',   cold: null,       room: 'по ярлычку', note: '' },
+    { name: 'Грибы муэр маринованные пф',            hot: '18 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Гриб ледяной маринованный пф',          hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Капуста ким чи пф (ферментация)',        hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Капуста ким чи Готовая (ферментированная)', hot: null,  cold: null,       room: '48 ч',  note: 'Ферментация 2 дня, затем в холодильник' },
+    { name: 'Битые огурцы пф',                       hot: '6 дней', cold: null,       room: null,    note: '' },
+    { name: 'Маринад на битые огурцы пф',            hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Маринад на капусту ким чи пф',          hot: '72 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Онигири в панировке пф (лосось/тунец/цыпленок)', hot: '72 ч', cold: '15 дней', room: null, note: '' },
+    { name: 'Манго пробитый в пюре пф',              hot: '24 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Гедза в ассортименте после вскрытия',   hot: '72 ч',   cold: '14 дней',  room: null,    note: '' },
+  ],
+  'Мясо': [
+    { name: 'Кура бедро сырая',                      hot: '48 ч',   cold: '15 дней',  room: null,    note: '' },
+    { name: 'Курочка карааге обжаренная пф',          hot: '36 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Кура су-вид пф',                        hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Говядина отварная пф',                  hot: '48 ч',   cold: '10 суток', room: 'после разморозки', note: '' },
+    { name: 'Говядина отварная после разморозки пф', hot: '48 ч',   cold: null,       room: 'после разморозки', note: '' },
+    { name: 'Курица Кацу пф',                        hot: '48 ч',   cold: null,       room: null,    note: '' },
+    { name: 'Кости говяжьи',                         hot: '24 ч',   cold: '45 суток', room: null,    note: '' },
+    { name: 'Говяжий жир пф',                        hot: null,     cold: '30 дней',  room: null,    note: '' },
+    { name: 'ЧикенБоллы / КрабБоллы / КреветочныеБоллы пф', hot: 'отварные 48 ч / обжаренные 12 ч', cold: 'сырые 15 дней', room: null, note: '' },
+    { name: 'Курица Кацу жареная пф',                hot: null,     cold: null,       room: '2 часа', note: 'В витрине' },
+  ],
+  'Молочная продукция': [
+    { name: 'Молоко кокосовое, молоко, сливки',      hot: '72 ч после вскрытия', cold: null, room: null, note: '' },
+  ],
+  'Яйца': [
+    { name: 'Яйцо сырое',                            hot: null,     cold: '10 суток', room: null,    note: '' },
+    { name: 'Яйца вареные маринованные пф (реализация)', hot: '48 ч (12 ч в маринаде)', cold: null, room: null, note: '' },
+  ],
+};
+
+// ===== SHELF LIFE UI =====
+let currentSlCategory = Object.keys(SHELF_LIFE)[0];
+
+function showShelfLife() {
+  renderShelfLifeScreen();
+  showScreen('shelf-life');
+}
+
+function renderShelfLifeScreen() {
+  const cats = Object.keys(SHELF_LIFE);
+  const tabs = document.getElementById('slTabs');
+  tabs.innerHTML = cats.map(cat => `
+    <button class="sl-tab ${cat === currentSlCategory ? 'active' : ''}" onclick="switchSlTab('${cat}')">${cat}</button>
+  `).join('');
+  renderSlContent();
+}
+
+function switchSlTab(cat) {
+  currentSlCategory = cat;
+  document.querySelectorAll('.sl-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === cat);
+  });
+  renderSlContent();
+}
+
+function renderSlContent() {
+  const items = SHELF_LIFE[currentSlCategory];
+  document.getElementById('slContent').innerHTML = items.map(item => {
+    const badges = [
+      item.hot  ? `<span class="sl-badge hot">🌡️ ${item.hot}</span>` : '',
+      item.cold ? `<span class="sl-badge cold">❄️ ${item.cold}</span>` : '',
+      item.room ? `<span class="sl-badge room">🏠 ${item.room}</span>` : '',
+    ].filter(Boolean).join('');
+    const note = item.note ? `<div class="sl-note">${item.note}</div>` : '';
+    return `
+      <div class="sl-item">
+        <div class="sl-name">${item.name}</div>
+        <div class="sl-badges">${badges}${note}</div>
+      </div>`;
+  }).join('');
+}
+
+// ===== SHELF LIFE QUIZ =====
+function makeShelfLifeQuestion() {
+  const cats = Object.keys(SHELF_LIFE);
+  const cat  = rand(cats);
+  const items = SHELF_LIFE[cat].filter(i => i.hot || i.cold || i.room);
+  const item  = rand(items);
+
+  // pick which shelf to quiz (hot/cold/room)
+  const opts = [];
+  if (item.hot)  opts.push({ label: '🌡️ +4+6°C', val: item.hot });
+  if (item.cold) opts.push({ label: '❄️ -18°C',   val: item.cold });
+  if (item.room) opts.push({ label: '🏠 Комн.',    val: item.room });
+  const chosen = rand(opts);
+
+  const correct = chosen.val;
+
+  // pool of wrong answers
+  const allVals = [...new Set(
+    Object.values(SHELF_LIFE).flat()
+      .map(i => [i.hot, i.cold, i.room])
+      .flat()
+      .filter(v => v && v !== correct)
+  )];
+  const wrongs = shuffle(allVals).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+
+  return {
+    type: 'quiz',
+    questionType: '⏱️ Сроки годности',
+    question: `${chosen.label}\n\nСрок хранения:\n«${item.name}»?`,
+    options,
+    correct,
+    detail: `${item.name} — ${chosen.label}: ${correct}`,
+    recipe: { emoji: '⏱️', name: item.name },
+    isShelfLife: true,
+  };
+}
+
+function startShelfLifeQuiz() {
+  const questions = Array.from({ length: 10 }, () => makeShelfLifeQuestion());
+  lessonState = {
+    questions,
+    current: 0,
+    hearts: 3,
+    correctCount: 0,
+    earnedXP: 0,
+    selectedAnswer: null,
+    answered: false,
+    mode: 'shelflife',
+    targetRecipeId: undefined,
+  };
+  renderLesson();
+  showScreen('lesson');
+}
+
+// ===================================================
+// ========= KITCHEN SIMULATOR =======================
+// ===================================================
+
+const KS_DISH_COUNT_OPTIONS = [2, 2, 2, 3, 3]; // weighted: mostly 2-3 dishes
+const KS_QUESTIONS_PER_DISH = 3;
+const KS_POSTCHECK_QUESTIONS = 3;
+const KS_TIMER = 18;
+
+let ks = {
+  order: [],           // array of recipe objects
+  questions: [],       // all questions flat
+  currentQ: 0,
+  correctCount: 0,
+  earnedXP: 0,
+  dishScores: [],      // {recipe, correct, total}
+  answered: false,
+  selected: null,
+  timerLeft: KS_TIMER,
+  timerInterval: null,
+};
+
+// ---- Question generators for kitchen sim ----
+
+function ksIngAmountQ(recipe) {
+  const single = recipe.single;
+  const ings = single
+    ? recipe.ingredients.filter(i => i.amountNum >= 10 && !i.unit)
+    : recipe.ingredients.filter(i => i.bigNum >= 10 && !i.unit);
+  if (!ings.length) return null;
+  const ing = rand(ings);
+
+  let correct, detail;
+  if (single) {
+    correct = ing.amount;
+    detail  = `${ing.name}: ${ing.amount}`;
+  } else {
+    const big = Math.random() > 0.5;
+    correct   = big ? ing.big : ing.small;
+    detail    = `${ing.name}: бол. ${ing.big} / мал. ${ing.small}`;
+  }
+
+  const pool = [10,15,20,25,30,40,50,60,80,100,120,130,140,180,200,220,260]
+    .filter(n => String(n + ' г') !== correct && n + ' г' !== correct);
+  const wrongs = shuffle(pool).slice(0, 3).map(n => n + ' г');
+  return {
+    qtype: 'Граммовка ингредиента',
+    q: `${recipe.emoji} ${recipe.name}\n\nСколько нужно:\n«${ing.name}»?`,
+    options: shuffle([correct, ...wrongs]),
+    correct, detail, recipe,
+  };
+}
+
+function ksBrothQ(recipe) {
+  // What broth does this recipe use?
+  const brothNames = {
+    0: 'Креветочный бульон',
+    1: 'Том ям бульон',
+    2: 'Говяжий бульон',
+    3: 'Бульон креветочный',
+    4: 'Мисо бульон',
+    5: 'Том ям вегетарианский',
+  };
+  if (!(recipe.id in brothNames)) return null;
+  const correct = brothNames[recipe.id];
+  const allBroths = Object.values(brothNames).filter(b => b !== correct);
+  const wrongs = shuffle(allBroths).slice(0, 3);
+  return {
+    qtype: 'Тип бульона',
+    q: `${recipe.emoji} ${recipe.name}\n\nКакой бульон используется в этом рамэне?`,
+    options: shuffle([correct, ...wrongs]),
+    correct, detail: `Бульон для "${recipe.name}": ${correct}`, recipe,
+  };
+}
+
+function ksStepOrderQ(recipe) {
+  if (!recipe.steps || recipe.steps.length < 3) return null;
+  // Pick a step and ask "что делают на этом шаге?"
+  const idx   = Math.floor(Math.random() * Math.min(recipe.steps.length, 5));
+  const step  = recipe.steps[idx];
+  const correct = step;
+  // Wrong options: steps from other recipes
+  const wrongPool = RECIPES
+    .filter(r => r.id !== recipe.id && r.steps)
+    .flatMap(r => r.steps)
+    .filter(s => s !== correct && s.length > 10);
+  const wrongs = shuffle(wrongPool).slice(0, 3);
+  if (wrongs.length < 3) return null;
+  // Trim long strings for display
+  const trim = s => s.length > 70 ? s.slice(0, 68) + '…' : s;
+  return {
+    qtype: `Шаг ${idx + 1} из рецепта`,
+    q: `${recipe.emoji} ${recipe.name}\n\nЧто делают на шаге ${idx + 1}?`,
+    options: shuffle([correct, ...wrongs]).map(trim),
+    correct: trim(correct),
+    detail: `Шаг ${idx + 1}: ${trim(correct)}`,
+    recipe,
+  };
+}
+
+function ksWhichIngQ(recipe) {
+  // Does this ingredient belong to this recipe?
+  const allNames = recipe.ingredients.map(i => i.name);
+  const correct = rand(allNames);
+  const wrongPool = [...new Set(
+    RECIPES.filter(r => r.id !== recipe.id)
+      .flatMap(r => r.ingredients.map(i => i.name))
+      .filter(n => !allNames.includes(n))
+  )];
+  const wrongs = shuffle(wrongPool).slice(0, 3);
+  if (wrongs.length < 3) return null;
+  return {
+    qtype: 'Состав блюда',
+    q: `${recipe.emoji} ${recipe.name}\n\nКакой из ингредиентов входит в это блюдо?`,
+    options: shuffle([correct, ...wrongs]),
+    correct, detail: `«${correct}» — в составе "${recipe.name}"`, recipe,
+  };
+}
+
+function ksOutputQ(recipe) {
+  const correct = recipe.output;
+  // Generate wrong outputs
+  const pool = ['500/300 г','600/350 г','700/500 г','400/250 г','550/380 г','450/280 г','320 г','260 г','215 г','250 г'];
+  const wrongs = shuffle(pool.filter(p => p !== correct)).slice(0, 3);
+  return {
+    qtype: 'Выход блюда',
+    q: `${recipe.emoji} ${recipe.name}\n\nКакой выход у этого блюда?`,
+    options: shuffle([correct, ...wrongs]),
+    correct, detail: `Выход "${recipe.name}": ${correct}`, recipe,
+  };
+}
+
+function ksEggQ() {
+  // Generic — always relevant
+  const correct = '48 ч (12 ч в маринаде)';
+  const wrongs   = ['24 ч','72 ч','12 ч'];
+  return {
+    qtype: '⏱️ Срок годности',
+    q: 'Яйца вареные маринованные пф\n\nКаков срок хранения при +4+6°C?',
+    options: shuffle([correct, ...wrongs]),
+    correct, detail: `Яйца марин. пф: ${correct} при +4+6°C`, recipe: { emoji: '🥚', name: 'Яйца маринованные' },
+  };
+}
+
+function ksShelfQ() {
+  return makeShelfLifeQuestion();
+}
+
+function generateDishQuestions(recipe) {
+  // Build a pool of possible generators for this recipe
+  const generators = [
+    () => ksIngAmountQ(recipe),
+    () => ksIngAmountQ(recipe),   // weighted double chance
+    () => ksWhichIngQ(recipe),
+    () => ksStepOrderQ(recipe),
+    () => ksBrothQ(recipe),
+    () => ksOutputQ(recipe),
+  ];
+  shuffle(generators);
+  const qs = [];
+  for (const gen of generators) {
+    if (qs.length >= KS_QUESTIONS_PER_DISH) break;
+    const q = gen();
+    if (q) qs.push(q);
+  }
+  return qs;
+}
+
+function generatePostCheckQuestions() {
+  const qs = [];
+  // Always include some shelf-life questions
+  for (let i = 0; i < KS_POSTCHECK_QUESTIONS; i++) {
+    if (i === 0) qs.push(ksEggQ());
+    else qs.push(ksShelfQ());
+  }
+  return qs;
+}
+
+// ---- Kitchen sim state machine ----
+
+function startKitchenSim() {
+  stopKsTimer();
+
+  // Pick random dishes (spread across categories when possible)
+  const dishCount = rand(KS_DISH_COUNT_OPTIONS);
+  const cats = shuffle(['ramen','snack','poke','bowl','donburi','salad']);
+  const order = [];
+  const usedIds = new Set();
+
+  for (const cat of cats) {
+    if (order.length >= dishCount) break;
+    const pool = RECIPES.filter(r => r.category === cat && !usedIds.has(r.id));
+    if (!pool.length) continue;
+    const pick = rand(pool);
+    order.push(pick);
+    usedIds.add(pick.id);
+  }
+  // Fill up if needed
+  while (order.length < dishCount) {
+    const pick = rand(RECIPES.filter(r => !usedIds.has(r.id)));
+    order.push(pick);
+    usedIds.add(pick.id);
+  }
+
+  ks.order = order;
+  ks.currentQ = 0;
+  ks.correctCount = 0;
+  ks.earnedXP = 0;
+  ks.dishScores = order.map(r => ({ recipe: r, correct: 0, total: 0 }));
+
+  // Build question list: per-dish questions + post-check
+  const dishQs = order.flatMap((recipe, di) => {
+    const qs = generateDishQuestions(recipe);
+    return qs.map(q => ({ ...q, dishIndex: di }));
+  });
+  const postQs = generatePostCheckQuestions().map(q => ({ ...q, dishIndex: -1 }));
+  ks.questions = [...dishQs, ...postQs];
+
+  renderKsTicket();
+  showScreen('kitchen-sim');
+}
+
+function renderKsTicket() {
+  const orderNum = String(Math.floor(Math.random() * 900) + 100);
+  document.getElementById('ksTitle').textContent = '👨‍🍳 Смена началась!';
+  document.getElementById('ksSubtitle').textContent = 'Изучи заказ и приступай';
+  document.getElementById('ksPhase').textContent = 'ТИКЕТ';
+  document.getElementById('ksPhase').className = 'kitchen-phase ticket';
+  document.getElementById('ksOrderNum').textContent = '#' + orderNum;
+
+  document.getElementById('ksTicketBody').innerHTML = ks.order.map((r, i) => `
+    <div class="ticket-dish">
+      <div class="ticket-dish-emoji">${r.emoji}</div>
+      <div class="ticket-dish-info">
+        <div class="ticket-dish-name">${r.name}</div>
+        <div class="ticket-dish-sub">${r.sub}</div>
+      </div>
+      <div class="ticket-dish-num">${i + 1}</div>
+    </div>`).join('');
+
+  const totalQ = ks.questions.length;
+  document.getElementById('ksTicketInfo').textContent =
+    `${ks.order.length} блюд • ${totalQ} вопросов • +срок годности`;
+
+  document.getElementById('ksTicketPhase').style.display = 'flex';
+  document.getElementById('ksCookingPhase').style.display = 'none';
+}
+
+function startCooking() {
+  document.getElementById('ksTicketPhase').style.display = 'none';
+  const cookPhase = document.getElementById('ksCookingPhase');
+  cookPhase.style.display = 'flex';
+  cookPhase.style.flexDirection = 'column';
+  cookPhase.style.flex = '1';
+  cookPhase.style.overflow = 'hidden';
+
+  document.getElementById('ksPhase').textContent = 'ГОТОВИМ';
+  document.getElementById('ksPhase').className = 'kitchen-phase cooking';
+  document.getElementById('ksTitle').textContent = '🔥 На кухне!';
+
+  renderDishIndicator();
+  renderKsQuestion();
+}
+
+function renderDishIndicator() {
+  const totalDishQs = ks.questions.filter(q => q.dishIndex >= 0);
+  const currentDishIdx = ks.currentQ < totalDishQs.length
+    ? ks.questions[ks.currentQ]?.dishIndex ?? -1
+    : -1;
+
+  document.getElementById('ksDishIndicator').innerHTML = ks.order.map((r, i) => {
+    // figure out if this dish is done, active, or pending
+    const dishQs  = ks.questions.filter(q => q.dishIndex === i);
+    const firstIdx= ks.questions.indexOf(dishQs[0]);
+    const lastIdx = ks.questions.indexOf(dishQs[dishQs.length - 1]);
+    const isDone  = ks.currentQ > lastIdx;
+    const isActive= !isDone && ks.currentQ >= firstIdx && ks.currentQ <= lastIdx;
+    return `<div class="dish-chip ${isDone ? 'done' : isActive ? 'active' : ''}">${r.emoji} ${r.name}</div>`;
+  }).join('');
+}
+
+function renderKsQuestion() {
+  const q = ks.questions[ks.currentQ];
+  const total = ks.questions.length;
+  const pct = (ks.currentQ / total) * 100;
+
+  document.getElementById('ksCookProgress').style.width = pct + '%';
+  document.getElementById('ksCookFeedback').style.display = 'none';
+  document.getElementById('ksCookFeedback').className = 'cook-feedback';
+  document.getElementById('ksBtnWrap').style.display = '';
+
+  const checkBtn = document.getElementById('ksCheckBtn');
+  checkBtn.disabled = true;
+  ks.answered = false;
+  ks.selected = null;
+
+  const isPost = q.dishIndex === -1;
+  if (isPost) {
+    document.getElementById('ksPhase').textContent = 'ПРОВЕРКА';
+    document.getElementById('ksPhase').className = 'kitchen-phase check';
+    document.getElementById('ksTitle').textContent = '📋 Проверка знаний';
+    document.getElementById('ksSubtitle').textContent = 'Финальный блок';
+  } else {
+    const dishName = ks.order[q.dishIndex]?.name || '';
+    document.getElementById('ksSubtitle').textContent = `Блюдо: ${dishName}`;
+    renderDishIndicator();
+  }
+
+  const letters = ['А','Б','В','Г'];
+  document.getElementById('ksCookQuestion').innerHTML = `
+    <div class="cook-type">${q.qtype}</div>
+    ${!isPost ? `<div class="cook-dish">${q.recipe?.emoji || ''} ${q.recipe?.name || ''}</div>` : ''}
+    <div class="cook-q">${q.q.replace(/\n/g,'<br>')}</div>
+    <div class="cook-options">
+      ${q.options.map((opt, i) => `
+        <button class="cook-opt" onclick="ksSelect(this,'${opt.replace(/'/g,"\\'")}')" data-val="${opt.replace(/"/g,'&quot;')}">
+          <span class="cook-letter">${letters[i]}</span>${opt}
+        </button>`).join('')}
+    </div>`;
+
+  startKsTimer();
+}
+
+function ksSelect(btn, val) {
+  if (ks.answered) return;
+  ks.selected = val;
+  document.querySelectorAll('.cook-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('ksCheckBtn').disabled = false;
+}
+
+function kitchenCheck() {
+  if (ks.answered) return;
+  ks.answered = true;
+  stopKsTimer();
+
+  const q = ks.questions[ks.currentQ];
+  document.querySelectorAll('.cook-opt').forEach(b => b.disabled = true);
+
+  const isCorrect = ks.selected === q.correct;
+
+  document.querySelectorAll('.cook-opt').forEach(b => {
+    if (b.dataset.val === q.correct) b.classList.add('correct');
+    else if (b.dataset.val === ks.selected && !isCorrect) b.classList.add('wrong');
+  });
+
+  const fb      = document.getElementById('ksCookFeedback');
+  const fbTitle = document.getElementById('ksFbTitle');
+  const fbDetail= document.getElementById('ksFbDetail');
+  const nextBtn = document.getElementById('ksNextBtn');
+  const bw      = document.getElementById('ksBtnWrap');
+
+  bw.style.display = 'none';
+  fb.style.display = 'flex';
+
+  const isLast = ks.currentQ >= ks.questions.length - 1;
+  nextBtn.textContent = isLast ? 'ЗАВЕРШИТЬ СМЕНУ →' : 'ДАЛЕЕ →';
+
+  if (isCorrect) {
+    fb.className = 'cook-feedback correct';
+    fbTitle.textContent = rand(['🎉 Верно!','✅ Правильно!','🔥 Отлично!','⭐ Молодец!']);
+    fbDetail.textContent = q.detail || '';
+    nextBtn.className = 'cook-next-btn correct';
+    ks.correctCount++;
+    ks.earnedXP += 10;
+    if (q.dishIndex >= 0) { ks.dishScores[q.dishIndex].correct++; }
+  } else {
+    fb.className = 'cook-feedback wrong';
+    fbTitle.textContent = (ks.selected ? '❌ Не так!' : '⏰ Время!') + ' Правильный ответ:';
+    fbDetail.textContent = q.correct + (q.detail ? ' — ' + q.detail : '');
+    nextBtn.className = 'cook-next-btn wrong';
+    document.getElementById('kitchen-sim').classList.add('shake');
+    setTimeout(() => document.getElementById('kitchen-sim').classList.remove('shake'), 400);
+  }
+
+  if (q.dishIndex >= 0) ks.dishScores[q.dishIndex].total++;
+  state.xp += isCorrect ? 10 : 0;
+  if (isCorrect) { state.correct++; showXP('+10 XP'); }
+  saveState();
+}
+
+function kitchenNext() {
+  ks.currentQ++;
+  if (ks.currentQ >= ks.questions.length) {
+    showKitchenResults();
+    return;
+  }
+  renderKsQuestion();
+}
+
+function showKitchenResults() {
+  stopKsTimer();
+  const total = ks.questions.length;
+  const acc   = Math.round(ks.correctCount / Math.max(total, 1) * 100);
+
+  document.getElementById('krTrophy').textContent = acc >= 80 ? '🏆' : acc >= 50 ? '⭐' : '💪';
+  document.getElementById('krTitle').textContent  = acc >= 80 ? 'Смена закрыта! Отлично!' : acc >= 50 ? 'Смена закрыта! Хорошо!' : 'Смена закрыта! Учи дальше!';
+  document.getElementById('krSub').textContent    = `Точность ${acc}% • ${ks.correctCount} из ${total} верно`;
+  document.getElementById('krXP').textContent     = '+' + ks.earnedXP;
+  document.getElementById('krCorrect').textContent= ks.correctCount;
+  document.getElementById('krDishes').textContent = ks.order.length;
+
+  document.getElementById('krDishList').innerHTML = ks.dishScores.map(ds => {
+    const pct = ds.total ? Math.round(ds.correct / ds.total * 100) : 0;
+    const star = pct >= 80 ? '⭐' : pct >= 50 ? '🟡' : '🔴';
+    return `
+      <div class="kr-dish-row">
+        <span>${ds.recipe.emoji}</span>
+        <span>${ds.recipe.name}</span>
+        <span class="kr-dish-score">${star} ${ds.correct}/${ds.total}</span>
+      </div>`;
+  }).join('') + `<div class="kr-dish-row" style="opacity:0.5">
+      <span>📋</span><span>Сроки годности</span>
+      <span class="kr-dish-score">${ks.correctCount - ks.dishScores.reduce((a,d)=>a+d.correct,0)}/${KS_POSTCHECK_QUESTIONS}</span>
+    </div>`;
+
+  // Update streak
+  if (ks.correctCount > 0) state.streak++;
+  saveState();
+
+  showScreen('kitchen-results');
+}
+
+// ---- Kitchen timer ----
+function startKsTimer() {
+  stopKsTimer();
+  ks.timerLeft = KS_TIMER;
+  updateKsTimerUI();
+  ks.timerInterval = setInterval(() => {
+    ks.timerLeft--;
+    updateKsTimerUI();
+    if (ks.timerLeft <= 0) {
+      stopKsTimer();
+      // auto-fail
+      ks.selected = null;
+      kitchenCheck();
+    }
+  }, 1000);
+}
+
+function stopKsTimer() {
+  if (ks.timerInterval) { clearInterval(ks.timerInterval); ks.timerInterval = null; }
+}
+
+function updateKsTimerUI() {
+  // reuse lesson timer arc if visible — but kitchen sim has its own screen
+  // inject a mini timer into the cooking question area header
+  const checkBtn = document.getElementById('ksCheckBtn');
+  if (!checkBtn) return;
+  const isDanger = ks.timerLeft <= 4;
+  const isWarn   = ks.timerLeft <= 8 && !isDanger;
+  const color    = isDanger ? '#FF4B4B' : isWarn ? '#FF9600' : '#FFD900';
+  checkBtn.textContent = `ПРОВЕРИТЬ (${ks.timerLeft}с)`;
+  checkBtn.style.background = !checkBtn.disabled ? color : '';
+}
+
+// ===== INIT =====
+renderHome();
+</script>
+</body>
+</html>
