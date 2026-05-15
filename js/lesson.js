@@ -470,4 +470,59 @@ window.nextQuestion = nextQuestion;
 window.flipCard = flipCard;
 window.restartLesson = restartLesson;
 
-// ===== SHELF LIFE QUIZ =====\nexport function makeShelfLifeQuestion() {\n  const cats = Object.keys(SHELF_LIFE);\n  const cat  = rand(cats);\n  const items = SHELF_LIFE[cat].filter(i => i.hot || i.cold || i.room);\n  const item  = rand(items);\n\n  // pick which shelf to quiz (hot/cold/room)\n  const opts = [];\n  if (item.hot)  opts.push({ label: '🌡️ +4+6°C', val: item.hot });\n  if (item.cold) opts.push({ label: '❄️ -18°C',   val: item.cold });\n  if (item.room) opts.push({ label: '🏠 Комн.',    val: item.room });\n  const chosen = rand(opts);\n\n  const correct = chosen.val;\n\n  // pool of wrong answers\n  const allVals = [...new Set(\n    Object.values(SHELF_LIFE).flat()\n      .map(i => [i.hot, i.cold, i.room])\n      .flat()\n      .filter(v => v && v !== correct)\n  )];\n  const wrongs = shuffle(allVals).slice(0, 3);\n  const options = shuffle([correct, ...wrongs]);\n\n  return {\n    type: 'quiz',\n    questionType: '⏱️ Сроки годности',\n    question: `${chosen.label}\\n\\nСрок хранения:\\n«${item.name}»?`,\n    options,\n    correct,\n    detail: `${item.name} — ${chosen.label}: ${correct}`,\n    recipe: { emoji: '⏱️', name: item.name },\n    isShelfLife: true,\n  };\n}\n\nexport function startShelfLifeQuiz() {\n  const questions = Array.from({ length: 10 }, () => makeShelfLifeQuestion());\n  setLessonState({\n    questions,\n    current: 0,\n    hearts: 3,\n    correctCount: 0,\n    earnedXP: 0,\n    selectedAnswer: null,\n    answered: false,\n    mode: 'shelflife',\n    targetRecipeId: undefined,\n  });\n  renderLesson();\n  showScreen('lesson');\n}\n\nwindow.startShelfLifeQuiz = startShelfLifeQuiz;
+// ===== SHELF LIFE QUIZ =====
+export function makeShelfLifeQuestion() {
+  const cats = Object.keys(SHELF_LIFE);
+  const cat  = rand(cats);
+  const items = SHELF_LIFE[cat].filter(i => i.hot || i.cold || i.room);
+  const item  = rand(items);
+
+  // pick which shelf to quiz (hot/cold/room)
+  const opts = [];
+  if (item.hot)  opts.push({ label: '🌡️ +4+6°C', val: item.hot });
+  if (item.cold) opts.push({ label: '❄️ -18°C',   val: item.cold });
+  if (item.room) opts.push({ label: '🏠 Комн.',    val: item.room });
+  const chosen = rand(opts);
+
+  const correct = chosen.val;
+
+  // pool of wrong answers
+  const allVals = [...new Set(
+    Object.values(SHELF_LIFE).flat()
+      .map(i => [i.hot, i.cold, i.room])
+      .flat()
+      .filter(v => v && v !== correct)
+  )];
+  const wrongs = shuffle(allVals).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+
+  return {
+    type: 'quiz',
+    questionType: '⏱️ Сроки годности',
+    question: `${chosen.label}\n\nСрок хранения:\n«${item.name}»?`,
+    options,
+    correct,
+    detail: `${item.name} — ${chosen.label}: ${correct}`,
+    recipe: { emoji: '⏱️', name: item.name },
+    isShelfLife: true,
+  };
+}
+
+export function startShelfLifeQuiz() {
+  const questions = Array.from({ length: 10 }, () => makeShelfLifeQuestion());
+  setLessonState({
+    questions,
+    current: 0,
+    hearts: 3,
+    correctCount: 0,
+    earnedXP: 0,
+    selectedAnswer: null,
+    answered: false,
+    mode: 'shelflife',
+    targetRecipeId: undefined,
+  });
+  renderLesson();
+  showScreen('lesson');
+}
+
+window.startShelfLifeQuiz = startShelfLifeQuiz;
