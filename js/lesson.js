@@ -1,5 +1,5 @@
 // ===== QUESTION GENERATORS & LESSON LOGIC =====
-import { RECIPES } from './data.js';
+import { RECIPES, SHELF_LIFE } from './data.js';
 import { getLessonState, setLessonState, getState, saveState } from './state.js';
 import { showScreen } from './ui.js';
 
@@ -22,6 +22,25 @@ function getWrongAmounts(correct, isSmall) {
 
 // Question generators
 export function makeQuizQuestion(recipe) {
+  if (recipe.single) {
+    // single-portion: use amount / amountNum
+    const valid = recipe.ingredients.filter(i => i.amountNum >= 10 && !i.unit);
+    const ing = rand(valid.length ? valid : recipe.ingredients.filter(i => !i.unit));
+    const correct = ing.amount;
+    const wrongNums = [10,15,20,25,30,40,50,60,80,100,120,130].filter(n => n !== ing.amountNum);
+    const wrongs = shuffle(wrongNums).slice(0,3).map(n => n + ' г');
+    const options = shuffle([correct, ...wrongs]);
+    return {
+      type: 'quiz',
+      questionType: 'Угадай граммовку',
+      question: `${recipe.emoji} ${recipe.name}\n\nСколько нужно:\n«${ing.name}»?`,
+      options,
+      correct,
+      detail: `${ing.name}: ${ing.amount}`,
+      recipe,
+    };
+  }
+
   const ing = rand(recipe.ingredients.filter(i => i.bigNum > 0.25));
   const isSmall = Math.random() > 0.5;
   const correct = isSmall ? ing.small : ing.big;
@@ -450,3 +469,5 @@ window.checkAnswer = checkAnswer;
 window.nextQuestion = nextQuestion;
 window.flipCard = flipCard;
 window.restartLesson = restartLesson;
+
+// ===== SHELF LIFE QUIZ =====\nexport function makeShelfLifeQuestion() {\n  const cats = Object.keys(SHELF_LIFE);\n  const cat  = rand(cats);\n  const items = SHELF_LIFE[cat].filter(i => i.hot || i.cold || i.room);\n  const item  = rand(items);\n\n  // pick which shelf to quiz (hot/cold/room)\n  const opts = [];\n  if (item.hot)  opts.push({ label: '🌡️ +4+6°C', val: item.hot });\n  if (item.cold) opts.push({ label: '❄️ -18°C',   val: item.cold });\n  if (item.room) opts.push({ label: '🏠 Комн.',    val: item.room });\n  const chosen = rand(opts);\n\n  const correct = chosen.val;\n\n  // pool of wrong answers\n  const allVals = [...new Set(\n    Object.values(SHELF_LIFE).flat()\n      .map(i => [i.hot, i.cold, i.room])\n      .flat()\n      .filter(v => v && v !== correct)\n  )];\n  const wrongs = shuffle(allVals).slice(0, 3);\n  const options = shuffle([correct, ...wrongs]);\n\n  return {\n    type: 'quiz',\n    questionType: '⏱️ Сроки годности',\n    question: `${chosen.label}\\n\\nСрок хранения:\\n«${item.name}»?`,\n    options,\n    correct,\n    detail: `${item.name} — ${chosen.label}: ${correct}`,\n    recipe: { emoji: '⏱️', name: item.name },\n    isShelfLife: true,\n  };\n}\n\nexport function startShelfLifeQuiz() {\n  const questions = Array.from({ length: 10 }, () => makeShelfLifeQuestion());\n  setLessonState({\n    questions,\n    current: 0,\n    hearts: 3,\n    correctCount: 0,\n    earnedXP: 0,\n    selectedAnswer: null,\n    answered: false,\n    mode: 'shelflife',\n    targetRecipeId: undefined,\n  });\n  renderLesson();\n  showScreen('lesson');\n}\n\nwindow.startShelfLifeQuiz = startShelfLifeQuiz;

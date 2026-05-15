@@ -1,6 +1,6 @@
 // ===== NAVIGATION & UI RENDERING =====
 import { getState, saveState } from './state.js';
-import { RECIPES } from './data.js';
+import { RECIPES, SHELF_LIFE } from './data.js';
 
 // ===== SCREEN NAVIGATION =====
 export function showScreen(id) {
@@ -113,3 +113,48 @@ window.showHome = showHome;
 window.confirmClose = confirmClose;
 window.startLessonForCurrent = startLessonForCurrent;
 window.startFlashcardForCurrent = startFlashcardForCurrent;
+
+// ===== SHELF LIFE UI =====
+let currentSlCategory = Object.keys(SHELF_LIFE)[0];
+
+export function showShelfLife() {
+  renderShelfLifeScreen();
+  showScreen('shelf-life');
+}
+
+export function renderShelfLifeScreen() {
+  const cats = Object.keys(SHELF_LIFE);
+  const tabs = document.getElementById('slTabs');
+  tabs.innerHTML = cats.map(cat => `
+    <button class="sl-tab ${cat === currentSlCategory ? 'active' : ''}" onclick="switchSlTab('${cat}')">${cat}</button>
+  `).join('');
+  renderSlContent();
+}
+
+export function switchSlTab(cat) {
+  currentSlCategory = cat;
+  document.querySelectorAll('.sl-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === cat);
+  });
+  renderSlContent();
+}
+
+export function renderSlContent() {
+  const items = SHELF_LIFE[currentSlCategory];
+  document.getElementById('slContent').innerHTML = items.map(item => {
+    const badges = [
+      item.hot  ? `<span class="sl-badge hot">🌡️ ${item.hot}</span>` : '',
+      item.cold ? `<span class="sl-badge cold">❄️ ${item.cold}</span>` : '',
+      item.room ? `<span class="sl-badge room">🏠 ${item.room}</span>` : '',
+    ].filter(Boolean).join('');
+    const note = item.note ? `<div class="sl-note">${item.note}</div>` : '';
+    return `
+      <div class="sl-item">
+        <div class="sl-name">${item.name}</div>
+        <div class="sl-badges">${badges}${note}</div>
+      </div>`;
+  }).join('');
+}
+
+window.showShelfLife = showShelfLife;
+window.switchSlTab = switchSlTab;
